@@ -1,0 +1,190 @@
+\chapter{Analyse des besoins et étude de l'existant}
+\label{chap:analyse-besoins-existant}
+\begin{spacing}{1.1}
+\minitoc
+\thispagestyle{MyStyle}
+\end{spacing}
+\newpage
+
+\section{Introduction}
+Dans la continuité du cadre général présenté au chapitre \ref{chap:cadre-general}, ce chapitre précise les besoins à satisfaire et positionne la solution proposée par rapport à l'existant. L'objectif est double: formaliser des exigences exploitables pour la conception, puis justifier les choix techniques au regard des limites observées dans les approches actuelles.
+
+\section{Analyse des besoins}
+\subsection{Besoins fonctionnels}
+Les besoins fonctionnels retenus couvrent l'ensemble du cycle d'enrichissement des données produit:
+\begin{itemize}
+  \item Déclencher l'enrichissement automatique d'une fiche produit à partir d'images, d'attributs existants et de descriptions disponibles;
+  \item Générer un ensemble d'attributs structurés (couleur dominante et secondaire, matière, type/catégorie, motif, saisonnalité, description structurée);
+  \item Affecter un score de confiance par attribut afin d'aider la décision métier;
+  \item Permettre la validation, la correction ou le rejet des attributs proposés via une interface de pilotage;
+  \item Tracer les décisions de validation (audit trail: utilisateur, date, valeur initiale, valeur finale);
+  \item Injecter les attributs validés dans SAP Hybris avec gestion des statuts et mécanismes de reprise en cas d'erreur;
+  \item Réindexer les données enrichies dans Apache Solr pour améliorer filtres, facettes et pertinence de recherche;
+  \item Exposer les données enrichies via API REST pour la réutilisation par d'autres composants.
+\end{itemize}
+
+\subsection{Besoins non fonctionnels}
+Au-delà des fonctionnalités, plusieurs exigences de qualité structurent la solution:
+\begin{itemize}
+  \item \textbf{Performance}: traitement en mode batch compatible avec le volume catalogue (jusqu'à plusieurs milliers de produits par lot);
+  \item \textbf{Fiabilité}: gestion robuste des erreurs d'API (retry, journalisation, reprise);
+  \item \textbf{Auditabilité}: historisation des modifications pour garantir la traçabilité métier;
+  \item \textbf{Maintenabilité}: ajout de nouveaux attributs sans refonte majeure du pipeline;
+  \item \textbf{Interopérabilité}: alignement avec l'écosystème Java/Spring, Hybris et Solr;
+  \item \textbf{Évolutivité}: capacité à intégrer ultérieurement des fonctionnalités multilingues et des contrôles de non-conformité.
+\end{itemize}
+
+\subsection{Acteurs et cas d'usage}
+La Figure \ref{fig:usecase-global} synthétise les interactions majeures entre les acteurs métier et la plateforme. Même si le schéma est générique, il met en évidence une idée centrale: chaque action sensible est conditionnée par l'authentification et s'inscrit dans une logique de gouvernance des données.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\linewidth]{diag1.jpg}
+  \caption{Diagramme de cas d'usage global de la plateforme}
+  \label{fig:usecase-global}
+\end{figure}
+
+En transposant ce principe au périmètre du PFE, les cas d'usage prioritaires sont:
+\begin{itemize}
+  \item UC1: Déclencher l'enrichissement d'un produit;
+  \item UC2: Valider / corriger / rejeter les attributs générés;
+  \item UC3: Importer les attributs validés dans Hybris;
+  \item UC4: Réindexer les produits concernés dans Solr;
+  \item UC5: Suivre les indicateurs de qualité des enrichissements.
+\end{itemize}
+
+\subsection{Priorisation des user stories}
+La planification fonctionnelle initiale est résumée dans la Figure \ref{fig:planning-user-stories}. Elle met en évidence un découpage progressif: d'abord les fonctions essentielles, puis les fonctions d'administration et de pilotage.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\linewidth]{tabm.drawio.png}
+  \caption{Priorisation initiale des user stories par release}
+  \label{fig:planning-user-stories}
+\end{figure}
+
+\section{Étude de l'existant}
+\subsection{Objectif et protocole des tests}
+L'étude de l'existant ne se limite pas à une comparaison théorique. Elle s'appuie sur des essais pratiques réalisés sur des cas réels de fiches produit (texte, métadonnées, images multiples), afin de répondre à trois questions:
+\begin{itemize}
+  \item les solutions \textbf{gratuites locales} sont-elles exploitables dans nos contraintes matérielles;
+  \item les \textbf{APIs gratuites} sont-elles suffisantes pour un flux e-commerce réel;
+  \item les \textbf{APIs payantes} apportent-elles le niveau de robustesse attendu pour industrialiser la solution.
+\end{itemize}
+
+Les tests ont été menés sur des scénarios de difficulté croissante: texte seul, image unique, multi-images, puis images + métadonnées.
+
+\subsection{Axe 1 -- Solutions gratuites locales (Ollama)}
+\subsubsection{Résultats observés}
+Les essais locaux avec des modèles multimodaux open-source (Gemma, Qwen-VL, Moondream) montrent une limite structurelle de l'infrastructure disponible:
+\begin{itemize}
+  \item latence très élevée (plusieurs minutes même pour une réponse simple);
+  \item forte pression CPU/RAM en l'absence de GPU dédié;
+  \item instabilités ou échecs sur les cas multi-images.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{image.png}
+  \caption{Exemple d'échec et de surcharge en exécution locale}
+  \label{fig:local-ollama-error}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{image_1.png}
+  \caption{Saturation des ressources machine en test local}
+  \label{fig:local-ollama-cpu}
+\end{figure}
+
+\subsubsection{Variante Colab GPU gratuit}
+Pour contourner la limite matérielle locale, des tests ont été réalisés sur Google Colab (GPU gratuit). Les modèles lourds restent néanmoins difficiles à exploiter opérationnellement: temps de réponse long, consommation GPU proche de la limite mémoire, et faible marge de stabilité pour des traitements en lot.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\linewidth]{test_qwen3.5.27b_avec_colab.png}
+  \caption{Test Qwen 3.5 27B sur Colab GPU gratuit}
+  \label{fig:colab-qwen}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\linewidth]{test_gemma31b_avec_colab.png}
+  \caption{Test Gemma 31B sur Colab GPU gratuit}
+  \label{fig:colab-gemma}
+\end{figure}
+
+\textbf{Verdict de l'axe 1:} viable pour exploration et POC technique, non viable pour un pipeline de production stable dans notre contexte.
+
+\subsection{Axe 2 -- APIs gratuites (OpenRouter, Groq, AI Studio Free)}
+\subsubsection{OpenRouter (free tier)}
+Les tests OpenRouter confirment un comportement acceptable sur des entrées simples (texte seul, parfois image unique), mais les cas cibles du projet (multi-images + métadonnées) provoquent régulièrement:
+\begin{itemize}
+  \item \textbf{context overflow};
+  \item \textbf{HTTP 429} (Too Many Requests);
+  \item dégradation de robustesse entre appels successifs.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\linewidth]{image_2.png}
+  \caption{Exemple de limite contextuelle sur OpenRouter en multi-images}
+  \label{fig:openrouter-overflow}
+\end{figure}
+
+\subsubsection{Groq (free tier)}
+Sur Groq, la latence est bonne, mais la contrainte TPM (tokens par minute) devient bloquante sur un produit enrichi avec images et métadonnées. Les erreurs \texttt{HTTP 413} et \texttt{rate\_limit\_exceeded} empêchent la continuité du flux.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\linewidth]{image_3.png}
+  \caption{Erreur de quota tokens observée sur Groq}
+  \label{fig:groq-413}
+\end{figure}
+
+\subsubsection{Google AI Studio (gratuit)}
+Les essais montrent une meilleure qualité de réponse que plusieurs alternatives gratuites, mais les mêmes limites restent présentes: quotas gratuits serrés, erreurs 429 sous charge, et absence de garantie de service.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\linewidth]{image_4.png}
+  \caption{Exemple d'utilisation AI Studio avec contrainte de ressources gratuites}
+  \label{fig:aistudio-free}
+\end{figure}
+
+\textbf{Verdict de l'axe 2:} utile pour prototypage rapide, insuffisant pour une chaîne fiable d'enrichissement e-commerce.
+
+\subsection{Axe 3 -- APIs payantes (candidats de production)}
+Les résultats des axes 1 et 2 conduisent à considérer des APIs payantes pour la phase d'industrialisation. Le Tableau \ref{tab:comparaison-payant} synthétise les options les plus crédibles.
+
+\begin{table}[H]
+  \centering
+  \caption{Comparaison des APIs payantes candidates pour la production}
+  \label{tab:comparaison-payant}
+  \begin{tabular}{|p{2.6cm}|p{3.1cm}|p{2.1cm}|p{2.0cm}|p{3.2cm}|}
+    \hline
+    \textbf{Solution} & \textbf{Forces} & \textbf{Latence} & \textbf{Coût} & \textbf{Risque principal} \\
+    \hline
+    GPT-4o (OpenAI) & Très bonne qualité multimodale, sortie JSON robuste & Faible à moyenne & Élevé & Coût à l'échelle et gouvernance des données \\
+    \hline
+    Gemini 2.5 (Google) & Bonne qualité visuelle, contexte large & Moyenne & Moyen à élevé & Stabilité des quotas selon plan choisi \\
+    \hline
+    Claude Sonnet (Anthropic) & Excellente compréhension sémantique, bonne rigueur de sortie & Faible à moyenne & Élevé & Coût et intégration selon stack retenue \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Sur le plan métier, ces offres payantes répondent mieux aux exigences critiques du projet: robustesse, continuité de service, meilleur support des scénarios multi-images et gestion contrôlée des quotas.
+
+\subsection{Synthèse de décision}
+L'étude expérimentale met en évidence une trajectoire claire:
+\begin{itemize}
+  \item \textbf{Gratuit local}: adapté à la recherche et aux démonstrations ponctuelles, mais trop instable pour un flux opérationnel;
+  \item \textbf{APIs gratuites}: utiles pour explorer rapidement des modèles, mais contraintes de quotas incompatibles avec un usage soutenu;
+  \item \textbf{APIs payantes}: option la plus réaliste pour atteindre la robustesse attendue en environnement e-commerce.
+\end{itemize}
+
+La stratégie recommandée est donc hybride: utiliser les offres gratuites pour le prototypage initial, puis basculer vers une API payante pour la phase de validation industrielle et de déploiement progressif.
+
+\section{Conclusion}
+Ce chapitre a transformé le besoin initial en exigences structurées et mesurables, puis a démontré les limites de l'existant et l'intérêt d'une approche hybride orientée IA multimodale. Les éléments établis ici serviront de base à la spécification détaillée et à la conception d'architecture du chapitre suivant.

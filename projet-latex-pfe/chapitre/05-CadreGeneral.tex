@@ -1,0 +1,99 @@
+\chapter{Cadre général du projet}
+\label{chap:cadre-general}
+\begin{spacing}{1.1}
+\minitoc
+\thispagestyle{MyStyle}
+\end{spacing}
+\newpage
+
+\section{Introduction}
+Ce chapitre introduit le cadre institutionnel, organisationnel et technique du projet. Il précise le besoin métier, les objectifs poursuivis, les acteurs impliqués ainsi que le périmètre de réalisation retenu.
+
+\section{Présentation de l'organisme d'accueil}
+\subsection{DECADE Tunisie et contexte d'activité}
+DECADE Tunisie est une filiale spécialisée dans l'ingénierie e-commerce. Le stage s'est déroulé au sein de l'entité de Sfax, dans un contexte de projets orientés qualité de données, performance de recherche et optimisation des parcours utilisateurs.
+
+L'environnement technique de référence mobilise notamment \textbf{SAP Commerce Cloud (Hybris)} pour la gestion du catalogue, \textbf{Apache Solr} pour la recherche et les facettes, ainsi qu'une architecture orientée \textbf{API REST} pour l'interopérabilité des services.
+
+\subsection{Cadre académique du stage}
+Ce travail s'inscrit dans le cadre du projet de fin d'études de la filière Génie Informatique et Mathématiques Appliquées de l'ENIS, sur la période de février à juillet 2026. Il vise à produire une contribution concrète, exploitable et argumentée scientifiquement.
+
+\section{Problématique}
+Dans un catalogue e-commerce volumineux, la qualité des fiches produit conditionne directement la pertinence de la recherche. Or, l'enrichissement manuel des attributs présente plusieurs limites:
+
+\begin{itemize}
+  \item forte charge opérationnelle pour les équipes métier;
+  \item hétérogénéité de saisie (valeurs redondantes, variantes lexicales, omissions);
+  \item retard d'indexation de données utiles pour Solr;
+  \item impact négatif sur les filtres dynamiques et le ranking.
+\end{itemize}
+
+La problématique centrale peut être formulée ainsi:\\
+\textit{Comment automatiser l'enrichissement des attributs produit à partir de données multimodales, tout en assurant la qualité, la traçabilité et l'intégration native dans l'écosystème Hybris/Solr ?}
+
+\section{Objectifs du projet}
+\subsection{Objectif principal}
+Concevoir une solution d'enrichissement automatique des données produit par IA multimodale, intégrée à SAP Commerce Cloud et exploitable dans Apache Solr pour améliorer la recherche e-commerce.
+
+\subsection{Objectifs spécifiques}
+\begin{itemize}
+  \item Extraire automatiquement des attributs structurés (couleur, matière, catégorie, motif, saisonnalité, description);
+  \item Mettre en place un espace de validation humaine (validation, correction, rejet) pour maîtriser la qualité;
+  \item Injecter les attributs validés dans Hybris avec une logique de mapping et de gestion de statuts;
+  \item Alimenter Solr pour améliorer facettes, filtres et pertinence des résultats;
+  \item Exposer les données enrichies via des services API pour faciliter la réutilisation.
+\end{itemize}
+
+\subsection{Indicateurs cibles}
+Afin d'évaluer l'apport de la solution, les indicateurs suivants sont retenus:
+\begin{itemize}
+  \item taux de complétion des attributs avant/après enrichissement;
+  \item part des suggestions validées manuellement;
+  \item score de confiance moyen par attribut;
+  \item impact sur la qualité de recherche (facettes disponibles, précision perçue).
+\end{itemize}
+
+\section{Acteurs et interactions principales}
+Le système met en jeu des acteurs humains et techniques complémentaires:
+\begin{itemize}
+  \item \textbf{Gestionnaire produit}: valide, corrige ou rejette les attributs générés;
+  \item \textbf{Administrateur Hybris}: supervise le mapping et l'import des données validées;
+  \item \textbf{Service IA multimodal}: propose les enrichissements avec score de confiance;
+  \item \textbf{Apache Solr}: indexe les nouveaux attributs pour améliorer la recherche;
+  \item \textbf{Client final}: bénéficie indirectement d'une navigation plus pertinente.
+\end{itemize}
+
+\section{Périmètre et contraintes}
+\subsection{Périmètre fonctionnel}
+Le périmètre du PFE couvre les briques suivantes:
+\begin{itemize}
+  \item enrichissement automatique d'attributs prioritaires;
+  \item validation humaine via interface dédiée;
+  \item intégration Hybris des attributs validés;
+  \item indexation Solr des nouveaux champs;
+  \item exposition des données enrichies via API.
+\end{itemize}
+
+\subsection{Contraintes de réalisation}
+Les contraintes majeures identifiées sont:
+\begin{itemize}
+  \item compatibilité avec le modèle de données Hybris existant;
+  \item maîtrise de la latence et du coût d'inférence LLM en traitement batch;
+  \item robustesse des échanges API (gestion d'erreurs, reprise, traçabilité);
+  \item qualité éditoriale multilingue et cohérence des attributs générés.
+\end{itemize}
+
+\section{Démarche méthodologique et planification}
+Le projet suit une démarche progressive structurée en phases:
+\begin{itemize}
+  \item cadrage et étude de l'existant;
+  \item spécifications fonctionnelles et techniques;
+  \item conception d'architecture;
+  \item implémentation incrémentale par sprints;
+  \item tests, mesure des indicateurs et consolidation documentaire.
+\end{itemize}
+
+Cette organisation permet d'aligner la livraison technique avec les objectifs métier, tout en conservant une capacité d'ajustement continue.
+
+\section{Conclusion}
+Ce chapitre a posé les fondations du projet: contexte entreprise, problématique, objectifs, acteurs, périmètre et contraintes. Il constitue le référentiel de cadrage sur lequel s'appuient les choix d'analyse et de conception présentés dans la suite du rapport.
