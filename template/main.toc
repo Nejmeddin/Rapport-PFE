@@ -1,0 +1,54 @@
+\babel@toc {french}{}\relax 
+\thispagestyle {MyStyle}
+\contentsline {chapter}{LISTE DES FIGURES}{iv}{chapter*.3}%
+\contentsline {chapter}{LISTE DES ABRÉVIATIONS}{v}{chapter*.4}%
+\contentsline {chapter}{INTRODUCTION GÉNÉRALE}{1}{chapter*.5}%
+\contentsline {chapter}{\numberline {1}Analyse de besoin et étude préalable}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}INTRODUCTION}{3}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Présentation de l'organisme d'accueil}{3}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Organisme d'acceuil }{3}{subsection.1.2.1}%
+\contentsline {section}{\numberline {1.3}Présentation du projet}{4}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1} Cadre du projet}{4}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Problématique}{4}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}Objectif du projet}{5}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}Étude de l'existant}{6}{subsection.1.3.4}%
+\contentsline {subsection}{\numberline {1.3.5}Avantages de l'existant}{7}{subsection.1.3.5}%
+\contentsline {subsection}{\numberline {1.3.6}Critique de l'existant}{7}{subsection.1.3.6}%
+\contentsline {subsection}{\numberline {1.3.7}Solution proposée}{8}{subsection.1.3.7}%
+\contentsline {section}{\numberline {1.4}Méthodologie de travail et planification}{9}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Méthode Scrum}{9}{subsection.1.4.1}%
+\contentsline {subsubsection}{\numberline {1.4.1.1}Acteurs clés et éléments de la méthode Scrum }{9}{subsubsection.1.4.1.1}%
+\contentsline {section}{\numberline {1.5}CONCLUSION}{10}{section.1.5}%
+\contentsline {chapter}{\numberline {2}Implémentation et Réalisation}{11}{chapter.2}%
+\contentsline {section}{\numberline {2.1}INTRODUCTION}{12}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Environnement de Développement}{12}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Environnement matériel}{12}{subsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.1.1}Environnement logiciel}{12}{subsubsection.2.2.1.1}%
+\contentsline {paragraph}{\numberline {a)}Google Colab}{12}{paragraph.2.2.1.1.1}%
+\contentsline {paragraph}{\numberline {b)}TensorFlow}{13}{paragraph.2.2.1.1.2}%
+\contentsline {subsection}{\numberline {2.2.2}Langages de programmation, Frameworks et technologies utilisées}{14}{subsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.2.1}Python}{14}{subsubsection.2.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2.2}Keras}{14}{subsubsection.2.2.2.2}%
+\contentsline {section}{\numberline {2.3}Implémentation du Modèle de Reconnaissance de Braille}{15}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Prétraitement des Données}{15}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Création du Modèle}{15}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Entraînement du Modèle}{16}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Évaluation et Validation}{16}{subsection.2.3.4}%
+\contentsline {subsection}{\numberline {2.3.5}Intégration avec l'Application Mobile}{16}{subsection.2.3.5}%
+\contentsline {section}{\numberline {2.4}Conclusion}{16}{section.2.4}%
+\contentsline {chapter}{\numberline {3}Résultat}{17}{chapter.3}%
+\contentsline {section}{\numberline {3.1}INTRODUCTION}{18}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Sprint 1: S'inscrire, s'authentifier et créer des formulaires}{18}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1} Analyse des besoins}{18}{subsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.1.1}Diagramme de cas d'utilisation du Sprint 1}{18}{subsubsection.3.2.1.1}%
+\contentsline {subsubsection}{\numberline {3.2.1.2}Diagramme de classe du Sprint 1}{19}{subsubsection.3.2.1.2}%
+\contentsline {section}{\numberline {3.3} Interfaces liées à un utilisateur}{19}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Interface : S’inscrire}{19}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Interface : S’Authentifier}{20}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Interface : Créer un nouveau formulaire}{21}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4} Conclusion}{21}{section.3.4}%
+\contentsline {chapter}{\numberline {4}Réalisation du Release 2 }{22}{chapter.4}%
+\contentsline {section}{\numberline {4.1}INTRODUCTION}{23}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1} Analyse des besoins}{23}{subsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.1.1}Diagramme de cas d'utilisation du Sprint 2}{23}{subsubsection.4.1.1.1}%
+\contentsline {chapter}{CONCLUSION GÉNÉRALE}{24}{chapter*.17}%

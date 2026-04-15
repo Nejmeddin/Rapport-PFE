@@ -1,0 +1,148 @@
+\chapter{Analyse de besoin et étude préalable}
+\begin{spacing}{1.2}
+\minitoc
+\thispagestyle{MyStyle}
+\end{spacing}
+\newpage
+
+\section{INTRODUCTION}
+Ce chapitre présente notre projet dans son contexte, en incluant l'organisme d'accueil et le sujet traité. Dans la première partie, nous évaluerons les solutions existantes pour la conversion d'images braille en texte, en identifiant leurs limites et en proposant des améliorations pour notre solution basée sur l'IA. La deuxième partie détaillera les méthodes de travail que nous avons utilisées, expliquant notre approche et les étapes clés du développement de notre modèle d'IA. 
+
+
+\section{Présentation de l'organisme d'accueil}
+\subsection{Organisme d'acceuil }
+
+L'entreprise collabore étroitement avec diverses organisations, notamment des associations pour personnes malvoyantes, des bibliothèques et des institutions éducatives, afin de développer des technologies d'assistance adaptées aux besoins réels des utilisateurs. Leurs projets précédents incluent des systèmes de reconnaissance de caractères pour différentes langues et alphabets, ainsi que des outils de synthèse vocale avancés.
+
+L'équipe de TunBra-Msign est composée d'ingénieurs en développement logiciel, d'experts en apprentissage automatique et en traitement d'images, ainsi que de spécialistes en accessibilité numérique. Leur approche collaborative et multidisciplinaire permet d'aborder les défis complexes de la conversion braille-texte de manière innovante et efficace.
+
+Au cœur de ce projet, j'ai eu l'opportunité de travailler sous la supervision de M. MONTASSAR MOUSSA, ingénieur principal chez TunBra-Msign, expert reconnu dans le domaine de l'IA et de l'accessibilité numérique. Son expertise et ses conseils ont été déterminants dans le développement de notre modèle de conversion d'images braille en texte lisible. De plus, j'ai bénéficié de l'encadrement académique de Mme BOUDOUR AMMAR, professeure à l'université, qui a apporté une perspective académique précieuse à ce projet industriel.
+\begin{figure}[H]%
+    \centering%
+    \setlength{\fboxsep}{5pt}%
+    \setlength{\fboxrule}{0.5pt}%
+    \fbox{
+    \includegraphics[width=\linewidth]{images/Msign_logo.png}%
+    }
+    \caption{TunBra-Msign logo}%
+\end{figure}
+
+\section{Présentation du projet}
+\subsection{  Cadre du projet}
+Ce travail s'inscrit dans le cadre de mon stage de fin d'études à l'École Nationale d'Ingénieurs de Sfax, dans la filière Génie Informatique et Mathématiques Appliquées. Il s'est déroulé au sein de l'entreprise "TunBra-Msign", qui développe actuellement une imprimante braille innovante. Ma mission spécifique consistait à concevoir et réaliser un modèle d'IA pour la conversion d'images braille en texte normal lisible, une composante essentielle de ce projet plus large. 
+\subsection{Problématique}
+À l'ère du numérique, l'accessibilité de l'information pour les personnes malvoyantes reste un défi majeur. Bien que le braille soit un outil essentiel pour la lecture et l'écriture, la conversion de documents braille en texte lisible par tous est souvent un processus laborieux et coûteux. De plus, avec la numérisation croissante des documents, il existe un besoin pressant de solutions automatisées pour convertir efficacement les images de textes braille en texte numérique standard.
+
+Le développement d'un modèle d'IA pour la conversion d'images braille en texte chez "TunBra-Msign" répond à ce besoin crucial dans le cadre de leur projet d'imprimante braille innovante. L'objectif est de fournir une solution précise et rapide permettant de transformer automatiquement des images de textes braille en texte lisible par tous, complémentant ainsi les capacités d'impression de l'appareil en développement.
+
+L'enjeu principal réside dans la conception d'un modèle d'IA robuste, capable de gérer diverses qualités d'images produites par l'imprimante ou capturées par d'autres moyens, tout en assurant une conversion rapide et précise. Ce modèle doit non seulement simplifier le processus de conversion, mais aussi offrir une haute précision pour garantir la fidélité du texte converti. De plus, il doit être suffisamment flexible pour s'intégrer harmonieusement dans le système global de l'imprimante braille et s'adapter aux différents besoins des utilisateurs.
+
+Ce projet explore ces défis et vise à développer une solution innovante et efficace, contribuant ainsi à améliorer l'accessibilité de l'information pour les personnes malvoyantes, à faciliter la communication entre les utilisateurs du braille et ceux qui ne le lisent pas, et à renforcer les capacités de l'imprimante braille en développement chez TunBra-Msign.
+
+ 
+
+
+\subsection{Objectif du projet}
+
+Le projet vise principalement à développer un modèle d'intelligence artificielle capable de convertir des images de braille en texte lisible. Les objectifs spécifiques de ce projet sont les suivants : 
+
+\begin{itemize}
+    \item \textbf{Faciliter la Reconnaissance des Images } : Créer un système intuitif qui permet aux utilisateurs de soumettre des images de braille sans nécessiter de compétences techniques particulières. 
+    \item \textbf{Intégrer des Techniques Avancées } : Utiliser des méthodes de traitement d'images et d'apprentissage automatique pour améliorer la précision de la conversion, en intégrant des algorithmes capables de reconnaître différents types de braille.  
+    \item \textbf{Garantir la Sécurité et la Confidentialité des Données } : Mettre en place des protocoles robustes pour protéger les données traitées, assurer leur confidentialité et respecter les normes en vigueur. 
+    \item \textbf{Faciliter l'Interprétation des Résultats } : Proposer des outils pour visualiser et analyser les résultats de conversion, permettant aux utilisateurs de comprendre facilement le texte généré. 
+    \item \textbf{Optimiser l'Expérience Utilisateur } : Concevoir une plateforme responsive et accessible, capable de s'adapter aux différents dispositifs et besoins des utilisateurs.
+    \item \textbf{Renforcer la Flexibilité et l'Évolutivité} :Développer un modèle évolutif capable de s'adapter aux évolutions technologiques et aux retours d'expérience des utilisateurs.
+    \item \textbf{Améliorer l'Efficacité des Processus } : Automatiser la conversion des images pour réduire le temps et les efforts nécessaires à la lecture du braille, améliorant ainsi l'efficacité opérationnelle du projet.  
+\end{itemize}
+
+\subsection{Étude de l'existant}
+
+\textbf{CNN-BrailleNet }Ce modèle utilise les réseaux de neurones convolutifs (CNN) pour identifier et traduire des lettres en braille à partir d'images. Il se concentre principalement sur la reconnaissance de lettres individuelles, avec une performance élevée sur des images bien segmentées. 
+
+\textbf{BRF OCR } BRF OCR est un outil open-source qui utilise la reconnaissance optique de caractères (OCR) pour décoder des documents en braille. Ce système se concentre sur les documents imprimés et convertit des fichiers BRF en texte lisible. 
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{5pt}
+    \setlength{\fboxrule}{0.5pt}
+    \fbox{
+    \includegraphics[width=5.5cm,height=5cm]{images/Logo du BRF OCR.jpg}
+    }
+    \caption{Logo du BRF OCR }
+\end{figure}
+
+\textbf{Dots OCR } Ce modèle est conçu pour reconnaître des motifs de points en braille sur des images, en utilisant un réseau neuronal basé sur des méthodes de segmentation d'images. Il se concentre sur des documents braille non standard. 
+
+
+\textbf{B2T (Braille-to-Text) } Ce modèle combine des techniques de vision par ordinateur avec des réseaux neuronaux pour extraire du texte à partir d'images de documents braille. Il est particulièrement efficace pour traiter du braille numérique imprimé. 
+
+\subsection{Avantages de l'existant}
+
+Les solutions actuelles de reconnaissance de braille présentent plusieurs avantages :
+
+\begin{itemize}
+    \item \textbf{Haute précision sur des lettres individuelles } : Les modèles comme CNN-BrailleNet offrent une excellente précision dans la reconnaissance de lettres isolées, particulièrement pour des images bien segmentées. 
+    \item \textbf{Accès open-source } :Des outils comme BRF OCR sont accessibles à tous, facilitant leur utilisation pour des projets de recherche et de développement. 
+    \item \textbf{Adaptabilité aux différents types de braille } : Dots OCR prend en charge des formats de braille non standards, rendant l'outil flexible pour différentes applications. 
+    \item \textbf{Approche basée sur l'intelligence artificielle } : L'utilisation des CNN et des réseaux neuronaux permet d'automatiser la reconnaissance et d'obtenir des résultats rapides.
+    \item \textbf{Prise en charge des documents complexes } :B2T est particulièrement adapté pour traiter des documents braille complets, offrant une solution robuste pour des projets à grande échelle.  
+
+\end{itemize}
+
+\subsection{Critique de l'existant}
+
+Bien que ces solutions aient leurs forces, elles présentent également certaines limitations : 
+
+\begin{itemize}
+    \item \textbf{Limitation à la reconnaissance de lettres individuelles } : Des modèles comme CNN-BrailleNet sont surtout efficaces pour des lettres isolées, mais ont des difficultés à traiter des textes complets en braille. 
+    \item \textbf{Manque de généralisation } :BRF OCR, bien que pratique pour des documents spécifiques, n'est pas toujours performant avec des images de mauvaise qualité ou des documents braille complexes. 
+    \item \textbf{Problèmes de segmentation } : Dots OCR peut rencontrer des difficultés dans la segmentation précise des points de braille, notamment en présence de bruits ou de distorsions dans l'image.  
+    \item \textbf{Performance limitée sur du braille manuscrit } :Les modèles existants ne traitent pas efficacement le braille manuscrit, qui présente des variations importantes par rapport au braille imprimé. 
+    \item \textbf{Problèmes de scalabilité } : La plupart des solutions sont conçues pour des tâches spécifiques et peuvent manquer d'évolutivité pour s'adapter à des projets plus larges, comme la conversion de volumes importants de documents braille.  
+
+\end{itemize}
+
+
+\subsection{Solution proposée}
+
+Notre solution vise à combler les lacunes identifiées dans les solutions existantes en apportant les améliorations suivantes : 
+
+\begin{itemize}
+    \item \textbf{Reconnaissance de texte complet en braille } : Contrairement aux approches centrées sur des lettres individuelles, notre modèle sera capable de traiter des textes complets en braille à partir d'images. 
+    \item \textbf{Segmentation améliorée } : Nous proposerons une méthode de segmentation d'image avancée qui pourra gérer les variations de qualité et de structure des documents en braille, notamment le braille manuscrit.  
+    \item \textbf{Performance robuste sur différents types de braille } :Le modèle sera conçu pour reconnaître à la fois le braille imprimé et le braille manuscrit, en utilisant des techniques de traitement d'images optimisées pour ces deux formats.  
+    \item \textbf{Évolutivité et rapidité } : Notre solution sera optimisée pour traiter des volumes importants de données avec des temps de traitement réduits, garantissant ainsi une meilleure performance pour des applications à grande échelle. 
+    \item \textbf{Personnalisation des résultats } : Nous introduirons une option permettant de personnaliser la conversion du texte en fonction des besoins spécifiques des utilisateurs, avec des paramètres ajustables pour la qualité et le format de sortie. 
+
+\end{itemize}
+
+\section{Méthodologie de travail et planification}
+
+Dans le cadre du développement de l'\textbackslash{}textbf\{imprimante braille innovante\} chez TunBra-Msign, l'équipe a adopté la méthodologie \textbackslash{}textbf\{Scrum\}, permettant d'optimiser les différentes étapes du projet grâce à une gestion agile. Le projet global de l'imprimante comprend plusieurs sous-projets, dont ma tâche spécifique, qui est le développement d'un modèle d'IA pour la conversion d'images de texte en braille en texte normal lisible. 
+
+\subsection{Méthode Scrum}
+
+La méthode Scrum \textbackslash{}cite\{scrumguide\} est une approche agile largement adoptée dans le développement de projets complexes. Elle se caractérise par la division du projet en sprints, des cycles de développement courts et intensifs. Chaque sprint débute par une réunion de planification (\textbackslash{}emph\{Sprint Planning\}) où l'équipe définit les objectifs et décompose les tâches à accomplir. 
+
+\subsubsection{Acteurs clés et éléments de la méthode Scrum }
+
+Dans notre projet d'imprimante braille, les rôles Scrum ont été adaptés comme suit : 
+
+\begin{itemize}
+    \item \textbf{Product Owner} :Représente les intérêts de TunBra-Msign et des utilisateurs finaux de l'imprimante braille. 
+    \item \textbf{Scrum Master} : M. MONTASSAR MOUSSA, qui facilite le processus Scrum et aide l'équipe à surmonter les obstacles. 
+    \item \textbf{Development Team} : Inclut les développeurs hardware, software, et moi-même pour la partie IA. 
+\end{itemize}
+
+Les éléments clés de notre processus Scrum incluent :
+
+\begin{itemize}
+    \item \textbf{Product Backlog} :Liste évolutive des fonctionnalités de l'imprimante braille, y compris les spécifications pour le modèle d'IA. 
+    \item \textbf{Sprint Backlog} : Tâches spécifiques à accomplir durant chaque sprint, incluant les étapes de développement du modèle d'IA. 
+    \item \textbf{Sprint} :Cycles de développement de deux semaines, au terme desquels une version améliorée du modèle d'IA est présentée. 
+    \item \textbf{Stand-up Meeting} (scrum) : Réunions quotidiennes brèves pour synchroniser les efforts de l'équipe. 
+\end{itemize}
+
+
+\section{CONCLUSION}
+Dans ce chapitre, nous avons présenté le contexte général du projet d'imprimante braille innovante chez TunBra-Msign et détaillé ma tâche spécifique de développement d'un modèle d'IA pour la conversion d'images braille en texte. Nous avons expliqué comment la méthodologie Scrum a été adaptée et appliquée à notre projet, en mettant l'accent sur son application au développement du modèle d'IA. Le chapitre suivant sera consacré à l'analyse et à la spécification des besoins du modèle d'IA développé, dans le contexte plus large de l'imprimante braille. 

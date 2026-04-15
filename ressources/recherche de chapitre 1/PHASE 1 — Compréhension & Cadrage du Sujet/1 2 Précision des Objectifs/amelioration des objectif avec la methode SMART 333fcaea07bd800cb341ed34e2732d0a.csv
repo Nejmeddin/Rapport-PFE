@@ -1,0 +1,5 @@
+﻿Objectif flou ❌,Objectif SMART ✅
+"""Améliorer les données produit”","""Atteindre un taux de complétion des attributs > 85% sur le catalogue pilote ”"
+"""Utiliser un LLM”","""Intégrer GPT-4o via API pour extraire 6 attributs structurés à partir d'une image produit avec un score de confiance > 0.8”"
+"""Faire un dashboard”","""Développer un dashboard React permettant à un gestionnaire de valider ou rejeter un attribut en < 3 clics, avec historique complet des modifications”"
+"""Améliorer Solr”","""Ajouter 6 nouveaux champs dynamiques dans le schéma Solr et implémenter les facettes couleur/matière/saisonnalité…”"

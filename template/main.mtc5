@@ -1,0 +1,16 @@
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {2.1}INTRODUCTION}{\reset@font\mtcSfont 12}{section.2.1}}
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {2.2}Environnement de Développement}{\reset@font\mtcSfont 12}{section.2.2}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.2.1}Environnement matériel}{\reset@font\mtcSSfont 12}{subsection.2.2.1}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.1.1}Environnement logiciel}{\reset@font\mtcSSSfont 12}{subsubsection.2.2.1.1}}
+{\reset@font\mtcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {a)}Google Colab}{\reset@font\mtcPfont 12}{paragraph.2.2.1.1.1}}
+{\reset@font\mtcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {b)}TensorFlow}{\reset@font\mtcPfont 13}{paragraph.2.2.1.1.2}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.2.2}Langages de programmation, Frameworks et technologies utilisées}{\reset@font\mtcSSfont 14}{subsection.2.2.2}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.2.1}Python}{\reset@font\mtcSSSfont 14}{subsubsection.2.2.2.1}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.2.2}Keras}{\reset@font\mtcSSSfont 14}{subsubsection.2.2.2.2}}
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {2.3}Implémentation du Modèle de Reconnaissance de Braille}{\reset@font\mtcSfont 15}{section.2.3}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.3.1}Prétraitement des Données}{\reset@font\mtcSSfont 15}{subsection.2.3.1}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.3.2}Création du Modèle}{\reset@font\mtcSSfont 15}{subsection.2.3.2}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.3.3}Entraînement du Modèle}{\reset@font\mtcSSfont 16}{subsection.2.3.3}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.3.4}Évaluation et Validation}{\reset@font\mtcSSfont 16}{subsection.2.3.4}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.3.5}Intégration avec l'Application Mobile}{\reset@font\mtcSSfont 16}{subsection.2.3.5}}
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {2.4}Conclusion}{\reset@font\mtcSfont 16}{section.2.4}}
