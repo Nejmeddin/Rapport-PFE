@@ -42,6 +42,7 @@
 \usepackage{tabularx}
 \usepackage{ctable}
 \usepackage{graphicx}
+\usepackage{svg}
 \usepackage{multirow}
 \usepackage{tikz}
 \usepackage{seqsplit}

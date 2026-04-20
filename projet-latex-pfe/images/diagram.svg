@@ -1,0 +1,109 @@
+<svg viewBox="0 0 480 500" height="500" width="480" xmlns="http://www.w3.org/2000/svg">
+  
+  <defs>
+    <marker orient="auto" markerHeight="3.8" markerWidth="3.8" markerUnits="strokeWidth" refY="5" refX="8.5" viewBox="0 0 10 10" id="arrow">
+      <path fill="#26334A" d="M 0,0 L 10,5 L 0,10 Z"></path>
+    </marker>
+  </defs>
+
+  
+  
+  
+  <rect stroke-width="2.5" stroke="#26334A" fill="#D9D9FF" ry="10" rx="10" height="60" width="240" y="30" x="60"></rect>
+
+  
+  <rect stroke-width="2.5" stroke="#26334A" fill="#FFFFBF" ry="10" rx="10" height="60" width="240" y="118" x="60"></rect>
+
+  
+  <rect stroke-width="2.5" stroke="#26334A" fill="#ECD9EC" ry="10" rx="10" height="60" width="240" y="206" x="60"></rect>
+
+  
+  <rect stroke-width="2.5" stroke="#26334A" fill="#FFEDCC" ry="10" rx="10" height="60" width="240" y="294" x="60"></rect>
+
+  
+  <rect stroke-width="2.5" stroke="#26334A" fill="#CCFFCC" ry="10" rx="10" height="60" width="240" y="382" x="60"></rect>
+
+  
+
+  
+  <line marker-end="url(#arrow)" stroke-width="3.5" stroke="#26334A" y2="118" x2="180" y1="90" x1="180"></line>
+
+  
+  <line marker-end="url(#arrow)" stroke-width="3.5" stroke="#26334A" y2="206" x2="180" y1="178" x1="180"></line>
+
+  
+  <line marker-end="url(#arrow)" stroke-width="3.5" stroke="#26334A" y2="294" x2="180" y1="266" x1="180"></line>
+
+  
+  <line marker-end="url(#arrow)" stroke-width="3.5" stroke="#26334A" y2="382" x2="180" y1="354" x1="180"></line>
+
+  
+
+  
+  <text fill="#26334A" font-size="9.5" font-family="sans-serif" text-anchor="start" y="104" x="315">
+    images + métadonnées
+  </text>
+
+  
+  <text fill="#26334A" font-size="9.5" font-family="sans-serif" text-anchor="start" y="192" x="315">
+    suggestions + scores
+  </text>
+
+  
+  <text fill="#26334A" font-size="9.5" font-family="sans-serif" text-anchor="start" y="280" x="315">
+    attributs validés
+  </text>
+
+  
+  <text fill="#26334A" font-size="9.5" font-family="sans-serif" text-anchor="start" y="368" x="315">
+    réindexation
+  </text>
+
+  
+
+  
+  <text fill="#1F2A44" font-size="12" font-family="sans-serif" text-anchor="middle" y="51" x="180">
+    Produit Hybris
+  </text>
+  <text fill="#1F2A44" font-size="12" font-family="sans-serif" text-anchor="middle" y="67" x="180">
+    (attributs incomplets)
+  </text>
+
+  
+  <text fill="#1F2A44" font-size="12" font-family="sans-serif" text-anchor="middle" y="139" x="180">
+    LLM multimodal
+  </text>
+  <text fill="#1F2A44" font-size="12" font-family="sans-serif" text-anchor="middle" y="155" x="180">
+    (analyse image + texte)
+  </text>
+
+  
+  <text fill="#1F2A44" font-size="12" font-family="sans-serif" text-anchor="middle" y="227" x="180">
+    Dashboard de validation
+  </text>
+  <text fill="#1F2A44" font-size="12" font-family="sans-serif" text-anchor="middle" y="243" x="180">
+    (validation / correction / rejet)
+  </text>
+
+  
+  <text fill="#1F2A44" font-size="12" font-family="sans-serif" text-anchor="middle" y="315" x="180">
+    SAP Hybris
+  </text>
+  <text fill="#1F2A44" font-size="12" font-family="sans-serif" text-anchor="middle" y="331" x="180">
+    (attributs enrichis injectés)
+  </text>
+
+  
+  <text fill="#1F2A44" font-size="12" font-family="sans-serif" text-anchor="middle" y="403" x="180">
+    Apache Solr
+  </text>
+  <text fill="#1F2A44" font-size="12" font-family="sans-serif" text-anchor="middle" y="419" x="180">
+    (index enrichi, facettes améliorées)
+  </text>
+
+  
+  <text fill="#26334A" font-style="italic" font-size="13" font-family="sans-serif" text-anchor="middle" y="465" x="180">
+    Flux d'enrichissement LLM et injection dans Solr
+  </text>
+
+</svg>

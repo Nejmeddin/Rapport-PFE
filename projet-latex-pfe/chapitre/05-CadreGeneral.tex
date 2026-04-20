@@ -7,93 +7,160 @@
 \newpage
 
 \section{Introduction}
-Ce chapitre introduit le cadre institutionnel, organisationnel et technique du projet. Il précise le besoin métier, les objectifs poursuivis, les acteurs impliqués ainsi que le périmètre de réalisation retenu.
+Ce chapitre constitue le socle de référence du mémoire. Il présente l'environnement institutionnel et technique dans lequel s'inscrit le projet, formule la problématique métier, précise les objectifs poursuivis et les acteurs concernés, puis délimite le périmètre de réalisation et la démarche méthodologique retenue.
 
+% -----------------------------------------------------------------------
 \section{Présentation de l'organisme d'accueil}
-\subsection{DECADE Tunisie et contexte d'activité}
-DECADE Tunisie est une filiale spécialisée dans l'ingénierie e-commerce. Le stage s'est déroulé au sein de l'entité de Sfax, dans un contexte de projets orientés qualité de données, performance de recherche et optimisation des parcours utilisateurs.
 
-L'environnement technique de référence mobilise notamment \textbf{SAP Commerce Cloud (Hybris)} pour la gestion du catalogue, \textbf{Apache Solr} pour la recherche et les facettes, ainsi qu'une architecture orientée \textbf{API REST} pour l'interopérabilité des services.
+\subsection{Groupe DECADE}
+DECADE est une société de services spécialisée dans le développement de sites e-commerce. Fondée et implantée à Paris, elle accompagne des marques et retailers dans la conception, l'intégration et l'optimisation de leurs plateformes de vente en ligne, avec une expertise centrale sur \textbf{SAP Commerce Cloud (Hybris)}, l'un des CMS e-commerce les plus déployés dans les environnements retail de grande envergure.
 
-\subsection{Cadre académique du stage}
-Ce travail s'inscrit dans le cadre du projet de fin d'études de la filière Génie Informatique et Mathématiques Appliquées de l'ENIS, sur la période de février à juillet 2026. Il vise à produire une contribution concrète, exploitable et argumentée scientifiquement.
+\subsection{DECADE Tunisie — filiale de Sfax}
+DECADE Tunisie est la filiale offshore du groupe. Son siège social est situé à Monastir, et ses activités de développement sont principalement portées par l'entité de \textbf{Sfax}, localisée dans l'Immeuble Focus sur la Route Gremda Ceinture Bourguiba. DECADE Tunisie opère en tant que centre de compétences techniques dédié aux projets e-commerce du groupe, avec un positionnement fort sur la qualité logicielle, la performance des solutions Hybris et l'optimisation des parcours utilisateurs.
 
-\section{Problématique}
-Dans un catalogue e-commerce volumineux, la qualité des fiches produit conditionne directement la pertinence de la recherche. Or, l'enrichissement manuel des attributs présente plusieurs limites:
-
+L'équipe accompagne au quotidien des projets à forte complexité technique, couvrant notamment~:
 \begin{itemize}
-  \item forte charge opérationnelle pour les équipes métier;
-  \item hétérogénéité de saisie (valeurs redondantes, variantes lexicales, omissions);
-  \item retard d'indexation de données utiles pour Solr;
-  \item impact négatif sur les filtres dynamiques et le ranking.
+  \item l'intégration et la personnalisation d'extensions SAP Hybris (Java/Spring~;
+  \item la gestion des catalogues produit et des flux de données~;
+  \item l'optimisation de la recherche via \textbf{Apache Solr}~;
 \end{itemize}
 
-La problématique centrale peut être formulée ainsi:\\
-\textit{Comment automatiser l'enrichissement des attributs produit à partir de données multimodales, tout en assurant la qualité, la traçabilité et l'intégration native dans l'écosystème Hybris/Solr ?}
+\subsection{Cadre académique du stage}
+Ce travail s'inscrit dans le cadre du Projet de Fin d'Études de la filière \textbf{Génie Informatique et Mathématiques Appliquées} de l'École Nationale d'Ingénieurs de Sfax (ENIS), sur la période du 02 février au 31 juillet 2026. L'encadrement industriel est assuré par \textbf{Monsieur Mohamed SIALA}, Chef de Projet chez DECADE Sfax, et l'encadrement académique par \textbf{Madame [Nom Encadrante ENIS]} de l'ENIS.
 
+% -----------------------------------------------------------------------
+\section{Problématique}
+
+\subsection{Contexte opérationnel}
+Dans un catalogue e-commerce volumineux, chaque fiche produit doit exposer un ensemble d'attributs structurés et cohérents afin de garantir la qualité de la navigation, des filtres et du moteur de recherche. Or, dans l'environnement actuel de DECADE, l'enrichissement de ces attributs repose largement sur des interventions humaines manuelles, avec plusieurs conséquences mesurables~:
+
+\begin{itemize}
+  \item \textbf{Charge opérationnelle élevée}~: les équipes métier consacrent un temps considérable à la saisie et à la correction des données produit~;
+  \item \textbf{Hétérogénéité de saisie}~: valeurs redondantes, variantes lexicales non normalisées et omissions fréquentes dégradent la cohérence du catalogue~;
+  \item \textbf{Retard d'indexation}~: des attributs utiles pour Solr (couleur, matière, saisonnalité) sont absents ou incorrects, appauvrissant les facettes et les filtres dynamiques~;
+  \item \textbf{Impact sur la conversion}~: une recherche imprécise réduit la visibilité des produits pertinents et détériore l'expérience utilisateur finale.
+\end{itemize}
+
+\subsection{Formulation de la problématique}
+La problématique centrale du projet peut être formulée de la façon suivante~:
+
+\begin{quote}
+\textit{Comment automatiser l'enrichissement des attributs produit à partir de données multimodales (images, texte, métadonnées), tout en assurant la qualité, la traçabilité et l'intégration native dans l'écosystème SAP Hybris / Apache Solr~?}
+\end{quote}
+
+% -----------------------------------------------------------------------
 \section{Objectifs du projet}
+
 \subsection{Objectif principal}
-Concevoir une solution d'enrichissement automatique des données produit par IA multimodale, intégrée à SAP Commerce Cloud et exploitable dans Apache Solr pour améliorer la recherche e-commerce.
+Concevoir et développer une solution intelligente d'enrichissement automatique des attributs produit par IA multimodale, intégrée nativement à \textbf{SAP Commerce Cloud (Hybris)} et exploitable dans \textbf{Apache Solr} pour améliorer la qualité de la recherche e-commerce.
 
 \subsection{Objectifs spécifiques}
 \begin{itemize}
-  \item Extraire automatiquement des attributs structurés (couleur, matière, catégorie, motif, saisonnalité, description);
-  \item Mettre en place un espace de validation humaine (validation, correction, rejet) pour maîtriser la qualité;
-  \item Injecter les attributs validés dans Hybris avec une logique de mapping et de gestion de statuts;
-  \item Alimenter Solr pour améliorer facettes, filtres et pertinence des résultats;
-  \item Exposer les données enrichies via des services API pour faciliter la réutilisation.
+  \item Extraire automatiquement des attributs structurés~: couleur dominante et secondaire, matière/texture, type de produit, motif, saisonnalité et description normalisée~;
+  \item Affecter un score de confiance par attribut pour guider les décisions de validation~;
+  \item Mettre en place un espace de pilotage humain (validation, correction, rejet) pour maîtriser la qualité avant injection~;
+  \item Injecter les attributs validés dans Hybris avec une logique de mapping, de gestion de statuts et de mécanismes de reprise en cas d'erreur~;
+  \item Alimenter Apache Solr pour améliorer facettes, filtres dynamiques et pertinence des résultats de recherche~;
+  \item Exposer les données enrichies via une API REST consommable par d'autres composants du système.
 \end{itemize}
 
 \subsection{Indicateurs cibles}
-Afin d'évaluer l'apport de la solution, les indicateurs suivants sont retenus:
+Afin d'évaluer objectivement l'apport de la solution, les indicateurs suivants sont retenus~:
 \begin{itemize}
-  \item taux de complétion des attributs avant/après enrichissement;
-  \item part des suggestions validées manuellement;
-  \item score de confiance moyen par attribut;
-  \item impact sur la qualité de recherche (facettes disponibles, précision perçue).
+  \item \textbf{Taux de complétion}~: proportion d'attributs renseignés avant et après enrichissement~;
+  \item \textbf{Taux de validation manuelle}~: part des suggestions acceptées par les gestionnaires produit~;
+  \item \textbf{Score de confiance moyen}~: niveau moyen de fiabilité par attribut généré par le LLM~;
+  \item \textbf{Impact sur la recherche}~: amélioration des facettes disponibles et de la précision perçue dans Solr.
 \end{itemize}
 
+% -----------------------------------------------------------------------
 \section{Acteurs et interactions principales}
-Le système met en jeu des acteurs humains et techniques complémentaires:
+Le système met en jeu des acteurs humains et techniques complémentaires dont les rôles sont définis comme suit~:
+
 \begin{itemize}
-  \item \textbf{Gestionnaire produit}: valide, corrige ou rejette les attributs générés;
-  \item \textbf{Administrateur Hybris}: supervise le mapping et l'import des données validées;
-  \item \textbf{Service IA multimodal}: propose les enrichissements avec score de confiance;
-  \item \textbf{Apache Solr}: indexe les nouveaux attributs pour améliorer la recherche;
-  \item \textbf{Client final}: bénéficie indirectement d'une navigation plus pertinente.
+  \item \textbf{Gestionnaire produit}~: consulte les suggestions d'enrichissement via le dashboard, valide, corrige ou rejette les attributs proposés~;
+  \item \textbf{Administrateur Hybris}~: configure l'extension, supervise le mapping des attributs vers le modèle de données Hybris et gère les versions d'enrichissement~;
+  \item \textbf{Service IA multimodal (LLM)}~: analyse les images et les métadonnées produit, génère les attributs enrichis avec score de confiance~;
+  \item \textbf{Apache Solr}~: consomme les attributs validés et les indexe pour améliorer la recherche facettée~;
+  \item \textbf{Client final}~: bénéficie indirectement d'une navigation plus précise et de résultats de recherche plus pertinents.
 \end{itemize}
 
+% -----------------------------------------------------------------------
 \section{Périmètre et contraintes}
+
 \subsection{Périmètre fonctionnel}
-Le périmètre du PFE couvre les briques suivantes:
+Le périmètre du PFE couvre les briques suivantes~:
 \begin{itemize}
-  \item enrichissement automatique d'attributs prioritaires;
-  \item validation humaine via interface dédiée;
-  \item intégration Hybris des attributs validés;
-  \item indexation Solr des nouveaux champs;
-  \item exposition des données enrichies via API.
+  \item enrichissement automatique des attributs prioritaires (couleur, matière, catégorie, motif, saisonnalité, description)~;
+  \item validation humaine via un dashboard React dédié~;
+  \item intégration des attributs validés dans l'extension SAP Hybris~;
+  \item réindexation des nouveaux champs dans Apache Solr~;
+  \item exposition des données enrichies via API REST.
+\end{itemize}
+
+\subsection{Hors périmètre}
+Les éléments suivants sont explicitement exclus du périmètre de ce PFE~:
+\begin{itemize}
+  \item intégration avec des systèmes PIM externes (Akeneo, Salsify, etc.)~;
+  \item déploiement en environnement de production (livraison en environnement staging)~;
+  \item génération de contenus visuels ou vidéo produit~;
+  \item développement d'une fonctionnalité de recommandation produit.
 \end{itemize}
 
 \subsection{Contraintes de réalisation}
-Les contraintes majeures identifiées sont:
+Les contraintes majeures identifiées sont~:
 \begin{itemize}
-  \item compatibilité avec le modèle de données Hybris existant;
-  \item maîtrise de la latence et du coût d'inférence LLM en traitement batch;
-  \item robustesse des échanges API (gestion d'erreurs, reprise, traçabilité);
-  \item qualité éditoriale multilingue et cohérence des attributs générés.
+  \item \textbf{Compatibilité Hybris}~: respect du modèle de données existant (\texttt{items.xml}, ServiceLayer, FlexibleSearch)~;
+  \item \textbf{Maîtrise des coûts LLM}~: optimisation du traitement batch pour contenir la consommation de tokens~;
+  \item \textbf{Robustesse des échanges API}~: gestion des erreurs, mécanismes de retry et traçabilité complète~;
+  \item \textbf{Qualité éditoriale}~: cohérence et normalisation des attributs générés, notamment dans une perspective multilingue (FR, EN, DE).
 \end{itemize}
 
+% -----------------------------------------------------------------------
 \section{Démarche méthodologique et planification}
-Le projet suit une démarche progressive structurée en phases:
+
+\subsection{Méthodologie adoptée~: Scrum adapté}
+Le projet s'appuie sur une démarche \textbf{Agile Scrum adaptée} au contexte d'un stage PFE. Le périmètre et les priorités fonctionnelles sont fixés en début de projet avec l'encadrant industriel, puis l'implémentation est organisée en \textbf{sprints de deux semaines} permettant des livraisons intermédiaires régulières, des revues et des ajustements.
+
+Cette approche offre plusieurs avantages dans notre contexte~:
 \begin{itemize}
-  \item cadrage et étude de l'existant;
-  \item spécifications fonctionnelles et techniques;
-  \item conception d'architecture;
-  \item implémentation incrémentale par sprints;
-  \item tests, mesure des indicateurs et consolidation documentaire.
+  \item capacité d'adaptation continue aux retours des parties prenantes~;
+  \item détection précoce des risques techniques (latence LLM, compatibilité Hybris)~;
+  \item livraisons progressives qui facilitent la validation métier à chaque étape.
 \end{itemize}
 
-Cette organisation permet d'aligner la livraison technique avec les objectifs métier, tout en conservant une capacité d'ajustement continue.
+Les réunions de suivi hebdomadaires avec l'encadrant industriel jouent le rôle de \textit{sprint reviews} informelles, et le tableau de bord de planification assure la visibilité sur l'avancement.
 
+\subsection{Planification générale}
+Le Tableau \ref{tab:planning} présente la répartition chronologique des phases du projet sur la durée du stage.
+
+\begin{table}[H]
+  \centering
+  \caption{Planification générale du projet (février -- juillet 2026)}
+  \label{tab:planning}
+  \begin{tabular}{|p{0.5cm}|p{3.5cm}|p{2.5cm}|p{6.5cm}|}
+    \hline
+    \textbf{\#} & \textbf{Phase} & \textbf{Semaines} & \textbf{Livrables principaux} \\
+    \hline
+    1 & Compréhension \& Cadrage & S1 -- S2 & Rapport de cadrage, étude de l'existant, besoins formalisés \\
+    \hline
+    2 & Spécifications \& Conception & S3 -- S6 & Diagrammes UML, architecture cible, maquettes Dashboard \\
+    \hline
+    3 & Développement -- Sprint 1 & S7 -- S8 & POC LLM, pipeline d'extraction d'attributs \\
+    \hline
+    4 & Développement -- Sprint 2 & S9 -- S10 & Extension Hybris, mapping, gestion des statuts \\
+    \hline
+    5 & Développement -- Sprint 3 & S11 -- S12 & Dashboard React (validation, comparaison, KPIs) \\
+    \hline
+    6 & Développement -- Sprint 4 & S13 -- S14 & Intégration Solr, API REST, gestion multilingue \\
+    \hline
+    7 & Tests \& Validation & S15 -- S16 & Plan de tests, mesure des indicateurs, corrections \\
+    \hline
+    8 & Documentation \& Rédaction & S17 -- S22 & Mémoire final, document d'exploitation, démonstration \\
+    \hline
+  \end{tabular}
+\end{table}
+
+% -----------------------------------------------------------------------
 \section{Conclusion}
-Ce chapitre a posé les fondations du projet: contexte entreprise, problématique, objectifs, acteurs, périmètre et contraintes. Il constitue le référentiel de cadrage sur lequel s'appuient les choix d'analyse et de conception présentés dans la suite du rapport.
+Ce chapitre a posé les fondations du projet~: contexte entreprise, problématique, objectifs, acteurs, périmètre, contraintes et démarche méthodologique. Il constitue le référentiel de cadrage sur lequel s'appuient l'ensemble des choix d'analyse et de conception présentés dans la suite du rapport. Le chapitre suivant approfondit les besoins, étudie les solutions existantes et pose l'état de l'art des technologies retenues.

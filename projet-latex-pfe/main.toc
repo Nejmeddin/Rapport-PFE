@@ -4,35 +4,56 @@
 \contentsline {chapter}{\numberline {1}Cadre général du projet}{4}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Introduction}{5}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Présentation de l'organisme d'accueil}{5}{section.1.2}%
-\contentsline {subsection}{\numberline {1.2.1}DECADE Tunisie et contexte d'activité}{5}{subsection.1.2.1}%
-\contentsline {subsection}{\numberline {1.2.2}Cadre académique du stage}{5}{subsection.1.2.2}%
-\contentsline {section}{\numberline {1.3}Problématique}{5}{section.1.3}%
-\contentsline {section}{\numberline {1.4}Objectifs du projet}{6}{section.1.4}%
-\contentsline {subsection}{\numberline {1.4.1}Objectif principal}{6}{subsection.1.4.1}%
-\contentsline {subsection}{\numberline {1.4.2}Objectifs spécifiques}{6}{subsection.1.4.2}%
-\contentsline {subsection}{\numberline {1.4.3}Indicateurs cibles}{6}{subsection.1.4.3}%
-\contentsline {section}{\numberline {1.5}Acteurs et interactions principales}{7}{section.1.5}%
-\contentsline {section}{\numberline {1.6}Périmètre et contraintes}{7}{section.1.6}%
-\contentsline {subsection}{\numberline {1.6.1}Périmètre fonctionnel}{7}{subsection.1.6.1}%
-\contentsline {subsection}{\numberline {1.6.2}Contraintes de réalisation}{7}{subsection.1.6.2}%
-\contentsline {section}{\numberline {1.7}Démarche méthodologique et planification}{8}{section.1.7}%
-\contentsline {section}{\numberline {1.8}Conclusion}{8}{section.1.8}%
-\contentsline {chapter}{\numberline {2}Analyse des besoins et étude de l'existant}{9}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Introduction}{10}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Analyse des besoins}{10}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Besoins fonctionnels}{10}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Besoins non fonctionnels}{11}{subsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3}Acteurs et cas d'usage}{11}{subsection.2.2.3}%
-\contentsline {subsection}{\numberline {2.2.4}Priorisation des user stories}{12}{subsection.2.2.4}%
-\contentsline {section}{\numberline {2.3}Étude de l'existant}{13}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Objectif et protocole des tests}{13}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Axe 1 -- Solutions gratuites locales (Ollama)}{14}{subsection.2.3.2}%
-\contentsline {subsubsection}{\numberline {2.3.2.1}Résultats observés}{14}{subsubsection.2.3.2.1}%
-\contentsline {subsubsection}{\numberline {2.3.2.2}Variante Colab GPU gratuit}{14}{subsubsection.2.3.2.2}%
-\contentsline {subsection}{\numberline {2.3.3}Axe 2 -- APIs gratuites (OpenRouter, Groq, AI Studio Free)}{16}{subsection.2.3.3}%
-\contentsline {subsubsection}{\numberline {2.3.3.1}OpenRouter (free tier)}{16}{subsubsection.2.3.3.1}%
-\contentsline {subsubsection}{\numberline {2.3.3.2}Groq (free tier)}{16}{subsubsection.2.3.3.2}%
-\contentsline {subsubsection}{\numberline {2.3.3.3}Google AI Studio (gratuit)}{17}{subsubsection.2.3.3.3}%
-\contentsline {subsection}{\numberline {2.3.4}Axe 3 -- APIs payantes (candidats de production)}{17}{subsection.2.3.4}%
-\contentsline {subsection}{\numberline {2.3.5}Synthèse de décision}{18}{subsection.2.3.5}%
-\contentsline {section}{\numberline {2.4}Conclusion}{18}{section.2.4}%
+\contentsline {subsection}{\numberline {1.2.1}Groupe DECADE}{5}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}DECADE Tunisie — filiale de Sfax}{5}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}Cadre académique du stage}{6}{subsection.1.2.3}%
+\contentsline {section}{\numberline {1.3}Problématique}{6}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Contexte opérationnel}{6}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Formulation de la problématique}{6}{subsection.1.3.2}%
+\contentsline {section}{\numberline {1.4}Objectifs du projet}{7}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Objectif principal}{7}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}Objectifs spécifiques}{7}{subsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.4.3}Indicateurs cibles}{7}{subsection.1.4.3}%
+\contentsline {section}{\numberline {1.5}Acteurs et interactions principales}{8}{section.1.5}%
+\contentsline {section}{\numberline {1.6}Périmètre et contraintes}{8}{section.1.6}%
+\contentsline {subsection}{\numberline {1.6.1}Périmètre fonctionnel}{8}{subsection.1.6.1}%
+\contentsline {subsection}{\numberline {1.6.2}Hors périmètre}{9}{subsection.1.6.2}%
+\contentsline {subsection}{\numberline {1.6.3}Contraintes de réalisation}{9}{subsection.1.6.3}%
+\contentsline {section}{\numberline {1.7}Démarche méthodologique et planification}{10}{section.1.7}%
+\contentsline {subsection}{\numberline {1.7.1}Méthodologie adoptée~: Scrum adapté}{10}{subsection.1.7.1}%
+\contentsline {subsection}{\numberline {1.7.2}Planification générale}{10}{subsection.1.7.2}%
+\contentsline {section}{\numberline {1.8}Conclusion}{11}{section.1.8}%
+\contentsline {chapter}{\numberline {2}Étude de l'existant}{12}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Introduction}{13}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Volet 1 — Apache Solr dans SAP Commerce (Existant interne)}{13}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Rôle et intégration}{13}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Flux d'indexation}{13}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Limitations structurelles de Solr}{14}{subsection.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.3.1}Limitation 1 — Modèle lexical et dépendance aux mots-clés}{14}{subsubsection.2.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.2.3.2}Limitation 2 — Absence de compréhension sémantique}{14}{subsubsection.2.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.2.3.3}Limitation 3 — Personnalisation du ranking limitée}{14}{subsubsection.2.2.3.3}%
+\contentsline {subsubsection}{\numberline {2.2.3.4}Limitation 4 — Complexité de configuration et maintenance}{15}{subsubsection.2.2.3.4}%
+\contentsline {subsubsection}{\numberline {2.2.3.5}Limitation 5 — Dépendance à l'indexation complète}{15}{subsubsection.2.2.3.5}%
+\contentsline {subsubsection}{\numberline {2.2.3.6}Limitation 6 — Qualité des résultats tributaire de la qualité des données}{15}{subsubsection.2.2.3.6}%
+\contentsline {subsection}{\numberline {2.2.4}Illustration concrète — Cas Jacadi}{15}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}En quoi l'enrichissement LLM améliore Solr}{16}{subsection.2.2.5}%
+\contentsline {subsubsection}{\numberline {2.2.5.1}Amélioration des facettes}{16}{subsubsection.2.2.5.1}%
+\contentsline {subsubsection}{\numberline {2.2.5.2}Flux d'intégration : de l'enrichissement LLM à Solr}{16}{subsubsection.2.2.5.2}%
+\contentsline {section}{\numberline {2.3}Volet 2 — Évaluation des solutions LLM disponibles}{17}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Objectif et protocole}{17}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Axe 1 — Exécution locale via Ollama}{18}{subsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.2.1}Présentation}{18}{subsubsection.2.3.2.1}%
+\contentsline {subsubsection}{\numberline {2.3.2.2}Résultats}{18}{subsubsection.2.3.2.2}%
+\contentsline {subsubsection}{\numberline {2.3.2.3}Verdict}{18}{subsubsection.2.3.2.3}%
+\contentsline {subsection}{\numberline {2.3.3}Axe 2 — APIs gratuites (OpenRouter, Groq)}{19}{subsection.2.3.3}%
+\contentsline {subsubsection}{\numberline {2.3.3.1}OpenRouter (Free Tier)}{19}{subsubsection.2.3.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.3.2}Groq (Free Tier)}{19}{subsubsection.2.3.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3.3}Verdict}{20}{subsubsection.2.3.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Axe 3 — GPU cloud (Google Colab)}{20}{subsection.2.3.4}%
+\contentsline {subsubsection}{\numberline {2.3.4.1}Qwen 3.5 27B}{20}{subsubsection.2.3.4.1}%
+\contentsline {subsubsection}{\numberline {2.3.4.2}Gemma 31B}{21}{subsubsection.2.3.4.2}%
+\contentsline {subsubsection}{\numberline {2.3.4.3}Verdict}{21}{subsubsection.2.3.4.3}%
+\contentsline {subsection}{\numberline {2.3.5}Axe 4 — APIs payantes (candidats production)}{21}{subsection.2.3.5}%
+\contentsline {subsection}{\numberline {2.3.6}Tableau comparatif global}{22}{subsection.2.3.6}%
+\contentsline {subsection}{\numberline {2.3.7}Synthèse de décision}{23}{subsection.2.3.7}%
+\contentsline {section}{\numberline {2.4}Conclusion}{24}{section.2.4}%

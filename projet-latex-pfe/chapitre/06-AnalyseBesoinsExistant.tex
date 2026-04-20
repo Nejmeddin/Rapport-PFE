@@ -1,190 +1,334 @@
-\chapter{Analyse des besoins et étude de l'existant}
-\label{chap:analyse-besoins-existant}
+\chapter{Étude de l'existant}
+\label{chap:etude-existant}
 \begin{spacing}{1.1}
 \minitoc
 \thispagestyle{MyStyle}
 \end{spacing}
 \newpage
 
+% -----------------------------------------------------------------------
 \section{Introduction}
-Dans la continuité du cadre général présenté au chapitre \ref{chap:cadre-general}, ce chapitre précise les besoins à satisfaire et positionne la solution proposée par rapport à l'existant. L'objectif est double: formaliser des exigences exploitables pour la conception, puis justifier les choix techniques au regard des limites observées dans les approches actuelles.
+Ce chapitre présente l'existant sur lequel s'appuie et s'intègre le projet. Il se structure en deux volets complémentaires. Le premier analyse Apache Solr, déjà opérationnel dans l'environnement SAP Commerce de DECADE, en identifiant ses limites directement liées à la qualité des données produit et en montrant comment l'enrichissement LLM les adresse. Le second évalue expérimentalement les solutions LLM disponibles (locales, gratuites, GPU cloud, payantes) afin de retenir le modèle le mieux adapté au pipeline d'enrichissement des fiches produit.
 
-\section{Analyse des besoins}
-\subsection{Besoins fonctionnels}
-Les besoins fonctionnels retenus couvrent l'ensemble du cycle d'enrichissement des données produit:
-\begin{itemize}
-  \item Déclencher l'enrichissement automatique d'une fiche produit à partir d'images, d'attributs existants et de descriptions disponibles;
-  \item Générer un ensemble d'attributs structurés (couleur dominante et secondaire, matière, type/catégorie, motif, saisonnalité, description structurée);
-  \item Affecter un score de confiance par attribut afin d'aider la décision métier;
-  \item Permettre la validation, la correction ou le rejet des attributs proposés via une interface de pilotage;
-  \item Tracer les décisions de validation (audit trail: utilisateur, date, valeur initiale, valeur finale);
-  \item Injecter les attributs validés dans SAP Hybris avec gestion des statuts et mécanismes de reprise en cas d'erreur;
-  \item Réindexer les données enrichies dans Apache Solr pour améliorer filtres, facettes et pertinence de recherche;
-  \item Exposer les données enrichies via API REST pour la réutilisation par d'autres composants.
-\end{itemize}
+% -----------------------------------------------------------------------
+\section{Volet 1 — Apache Solr dans SAP Commerce (Existant interne)}
 
-\subsection{Besoins non fonctionnels}
-Au-delà des fonctionnalités, plusieurs exigences de qualité structurent la solution:
-\begin{itemize}
-  \item \textbf{Performance}: traitement en mode batch compatible avec le volume catalogue (jusqu'à plusieurs milliers de produits par lot);
-  \item \textbf{Fiabilité}: gestion robuste des erreurs d'API (retry, journalisation, reprise);
-  \item \textbf{Auditabilité}: historisation des modifications pour garantir la traçabilité métier;
-  \item \textbf{Maintenabilité}: ajout de nouveaux attributs sans refonte majeure du pipeline;
-  \item \textbf{Interopérabilité}: alignement avec l'écosystème Java/Spring, Hybris et Solr;
-  \item \textbf{Évolutivité}: capacité à intégrer ultérieurement des fonctionnalités multilingues et des contrôles de non-conformité.
-\end{itemize}
+\subsection{Rôle et intégration}
+Apache Solr est le moteur de recherche et d'indexation déjà intégré nativement dans l'environnement SAP Commerce Cloud (Hybris) de DECADE. Basé sur Apache Lucene, il assure trois fonctions critiques pour le catalogue e-commerce~: la recherche produit full-text, les filtres de navigation par facettes, et l'auto-complétion.
 
-\subsection{Acteurs et cas d'usage}
-La Figure \ref{fig:usecase-global} synthétise les interactions majeures entre les acteurs métier et la plateforme. Même si le schéma est générique, il met en évidence une idée centrale: chaque action sensible est conditionnée par l'authentification et s'inscrit dans une logique de gouvernance des données.
+Son rôle dans l'architecture est complémentaire à la base de données Hybris~: là où Hybris stocke la source de vérité (les données produit), Solr maintient un index dédié, optimisé pour répondre aux requêtes utilisateurs en quelques millisecondes.
+
+\subsection{Flux d'indexation}
+Le processus d'indexation se déroule en cinq étapes séquentielles~:
+\begin{enumerate}
+  \item Les données produits sont stockées dans la base SAP Commerce~;
+  \item Un processus d'indexation les extrait et les transforme en documents Solr~;
+  \item Ces documents sont persistés dans l'index Solr~;
+  \item Lorsqu'un utilisateur effectue une recherche, la requête est transmise à Solr~;
+  \item Solr retourne les résultats avec les facettes associées.
+\end{enumerate}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.95\linewidth]{diag1.jpg}
-  \caption{Diagramme de cas d'usage global de la plateforme}
-  \label{fig:usecase-global}
+  \begin{tikzpicture}[scale=0.85, font=\small,
+    box/.style={draw, rounded corners, minimum width=3.5cm, minimum height=0.75cm, align=center}]
+
+    \node[box, fill=blue!15]   (hybris)    at (0, 3.2)  {Base Hybris\\(Source de vérité)};
+    \node[box, fill=gray!15]   (index)     at (0, 2.1)  {Processus d'indexation};
+    \node[box, fill=orange!20] (solridx)   at (0, 1.0)  {Index Solr\\(Documents indexés)};
+    \node[box, fill=red!15]    (query)     at (-3, -0.3){Requête\\utilisateur};
+    \node[box, fill=green!20]  (results)   at (3, -0.3) {Résultats\\+ Facettes};
+
+    \draw[->, thick] (hybris)  -- (index);
+    \draw[->, thick] (index)   -- (solridx);
+    \draw[->, thick] (query)   -- (solridx);
+    \draw[->, thick] (solridx) -- (results);
+  \end{tikzpicture}
+  \caption{Flux d'indexation et de recherche Solr dans SAP Commerce}
+  \label{fig:solr-flux}
 \end{figure}
 
-En transposant ce principe au périmètre du PFE, les cas d'usage prioritaires sont:
+\subsection{Limitations structurelles de Solr}
+Bien qu'opérationnel, Solr présente six limitations qui dégradent directement la qualité de recherche et motivent le présent projet~:
+
+\subsubsection{Limitation 1 — Modèle lexical et dépendance aux mots-clés}
+Solr analyse les tokens (mots) présents dans la requête et les rapproche des mots présents dans l'index. Il ne comprend pas la signification ou l'intention derrière la requête.
+
+\begin{quote}
+\textit{Exemple~: Requête \og best vacuum for pet hair \fg{} -> Solr analyse [best][vacuum][pet][hair] -> ne comprend pas \og aspirateur adapté aux poils d'animaux \fg{}.}
+\end{quote}
+
+\subsubsection{Limitation 2 — Absence de compréhension sémantique}
+Solr ne possède pas de mécanisme natif de recherche sémantique. Il ne peut ni décoder l'intention utilisateur, ni gérer les synonymes implicites, ni classer les résultats par pertinence de sens.
+
+\subsubsection{Limitation 3 — Personnalisation du ranking limitée}
+En configuration standard, Solr retourne les mêmes résultats pour tous les utilisateurs effectuant la même requête. Les moteurs modernes s'appuient sur le machine learning pour personnaliser le ranking (historique de navigation, préférences). Solr exige des règles manuelles de boosting.
+
+\subsubsection{Limitation 4 — Complexité de configuration et maintenance}
+Améliorer la pertinence nécessite des interventions techniques importantes~: règles de boosting, dictionnaires de synonymes, analyseurs linguistiques. Cette complexité accroît les coûts de maintenance et exige une expertise pointue.
+
+\subsubsection{Limitation 5 — Dépendance à l'indexation complète}
+Lors d'un Full Index, l'index existant est remplacé, ce qui peut créer une indisponibilité temporaire de la recherche. Sur un catalogue de grande taille, l'opération est longue et coûteuse en ressources.
+
+\subsubsection{Limitation 6 — Qualité des résultats tributaire de la qualité des données}
+C'est la limitation la plus directement liée au projet~: si les attributs produit sont incomplets ou hétérogènes dans Hybris, l'index Solr reproduit ces lacunes. Les facettes (couleur, matière, saisonnalité) ne peuvent exister que si les attributs correspondants sont renseignés dans la source.
+
+\subsection{Illustration concrète — Cas Jacadi}
+Un exemple réel illustre ces limitations~: dans le catalogue Jacadi (vêtements enfants), la recherche du terme \og table \fg{} retourne des produits vestimentaires. Plusieurs mécanismes combinés l'expliquent~:
+
 \begin{itemize}
-  \item UC1: Déclencher l'enrichissement d'un produit;
-  \item UC2: Valider / corriger / rejeter les attributs générés;
-  \item UC3: Importer les attributs validés dans Hybris;
-  \item UC4: Réindexer les produits concernés dans Solr;
-  \item UC5: Suivre les indicateurs de qualité des enrichissements.
+  \item \textbf{Free Text Search}~: Solr indexe la description complète des produits. Une description comme \og idéal pour dîner à table en famille \fg{} contient le token \og table \fg{}~;
+  \item \textbf{Fuzzy Search}~: la recherche approximative peut matcher \og table \fg{} sur \og tableau \fg{} ou \og tablette \fg{}~;
+  \item \textbf{Synonymes configurés}~: si le backoffice définit \og table $\leftrightarrow$ furniture \fg{}, la requête s'étend à \og table OR furniture \fg{}~;
+  \item \textbf{Tokenisation}~: un analyseur mal configuré peut extraire \og table \fg{} depuis \og comfortable \fg{}.
 \end{itemize}
 
-\subsection{Priorisation des user stories}
-La planification fonctionnelle initiale est résumée dans la Figure \ref{fig:planning-user-stories}. Elle met en évidence un découpage progressif: d'abord les fonctions essentielles, puis les fonctions d'administration et de pilotage.
+\subsection{En quoi l'enrichissement LLM améliore Solr}
+L'enrichissement LLM ne remplace pas Solr, il le complète en alimentant l'index avec des attributs structurés, normalisés et fiables.
+
+\subsubsection{Amélioration des facettes}
+En générant des attributs enrichis (couleur, matière, occasion, style, saisonnalité), le LLM crée les champs manquants qui deviendront des facettes exploitables dans Solr.
+
+\begin{table}[H]
+  \centering
+  \caption{Comparaison avant/après enrichissement LLM dans Solr}
+  \label{tab:avant-apres-solr}
+  \begin{tabular}{|p{2.5cm}|p{5.5cm}|p{5.5cm}|}
+    \hline
+    & \textbf{Avant enrichissement} & \textbf{Après enrichissement LLM} \\
+    \hline
+    \textbf{Attributs indexés} & name, description (texte libre) & couleur, matière, catégorie, motif, saison, occasion \\
+    \hline
+    \textbf{Facettes disponibles} & Aucune ou très limitées & Navigation par couleur, matière, saison, occasion \\
+    \hline
+    \textbf{Pertinence Solr} & Dépend du texte libre uniquement & Filtrée sur attributs précis et normalisés \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsubsection{Flux d'intégration : de l'enrichissement LLM à Solr}
+Le projet s'inscrit dans un flux linéaire~: le LLM génère les attributs manquants, ces attributs sont validés par un gestionnaire produit, injectés dans Hybris, puis réindexés dans Solr. La Figure \ref{fig:enrichment-to-solr} illustre ce flux.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.95\linewidth]{tabm.drawio.png}
-  \caption{Priorisation initiale des user stories par release}
-  \label{fig:planning-user-stories}
+  \begin{tikzpicture}[
+      scale=0.95,
+      font=\small,
+      box/.style={
+        draw,
+        rounded corners=4pt,
+        minimum width=4.8cm,
+        minimum height=1.05cm,
+        align=center,
+        text width=4.4cm,
+        inner sep=8pt
+      },
+      arrow/.style={->, thick}
+    ]
+
+    \node[box, fill=blue!15]    (produit)   at (0, 3.4)  {Produit Hybris\\(attributs incomplets)};
+    \node[box, fill=yellow!25]  (llm)       at (0, 1.8)  {LLM multimodal\\(analyse image + texte)};
+    \node[box, fill=violet!15]  (dashboard) at (0, 0.2)  {Dashboard de validation\\(validation / correction / rejet)};
+    \node[box, fill=orange!25]  (hybris)    at (0, -1.4) {SAP Hybris\\(attributs enrichis injectés)};
+    \node[box, fill=green!25]   (solr)      at (0, -3.0) {Apache Solr\\(index enrichi, facettes améliorées)};
+
+    \draw[arrow] (produit)   -- (llm)
+      node[midway, right=4mm, font=\footnotesize, align=left]
+      {images + métadonnées};
+
+    \draw[arrow] (llm)       -- (dashboard)
+      node[midway, right=4mm, font=\footnotesize, align=left]
+      {suggestions + scores\\de confiance};
+
+    \draw[arrow] (dashboard) -- (hybris)
+      node[midway, right=4mm, font=\footnotesize, align=left]
+      {attributs validés / corrigés};
+
+    \draw[arrow] (hybris)    -- (solr)
+      node[midway, right=4mm, font=\footnotesize, align=left]
+      {réindexation automatique};
+
+  \end{tikzpicture}
+  \caption{Flux d'enrichissement des attributs par LLM multimodal et injection dans Solr}
+  \label{fig:enrichment-to-solr}
 \end{figure}
 
-\section{Étude de l'existant}
-\subsection{Objectif et protocole des tests}
-L'étude de l'existant ne se limite pas à une comparaison théorique. Elle s'appuie sur des essais pratiques réalisés sur des cas réels de fiches produit (texte, métadonnées, images multiples), afin de répondre à trois questions:
+% -----------------------------------------------------------------------
+\section{Volet 2 — Évaluation des solutions LLM disponibles}
+
+\subsection{Objectif et protocole}
+Avant de retenir un modèle pour la production, une phase d'exploration comparative a été menée. L'objectif est de qualifier chaque approche sur trois critères~: capacité à traiter des scénarios réalistes, stabilité, et viabilité pour un usage productif continu.
+
+Les tests ont été conduits sur quatre niveaux de complexité croissante~:
+\begin{enumerate}
+  \item \textbf{Texte seul}~: description produit sans image~;
+  \item \textbf{Image unique}~: une seule image produit encodée en base64~;
+  \item \textbf{Multi-images}~: 3 à 4 vues du même produit~;
+  \item \textbf{Images + métadonnées}~: multi-images + attributs existants + description textuelle.
+\end{enumerate}
+
+Ce dernier scénario représente le cas d'usage réel du projet et génère un contexte volumétrique élevé.
+
+\subsection{Axe 1 — Exécution locale via Ollama}
+
+\subsubsection{Présentation}
+Ollama est un outil open source permettant d'exécuter des LLMs directement en local, sans API externe. Ses avantages théoriques sont la confidentialité des données et l'absence de quota. Trois modèles multimodaux ont été testés~: Gemma 4 (Google DeepMind), Qwen-VL (Alibaba) et Moondream (open source).
+
+\subsubsection{Résultats}
+L'exécution locale révèle une limite structurelle matérielle~: sans GPU dédié, le traitement repose entièrement sur le CPU, causant une latence prohibitive, une saturation de la RAM par les images encodées en base64, et des instabilités répétées sur les cas multi-images.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{image.png}
+  \caption{Saturation CPU à 96,5\% lors d'inférence Ollama locale}
+  \label{fig:ollama-crash}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{image_1.png}
+  \caption{Erreur d'inférence Ollama — modèle trop lourd pour la session GPU actuelle}
+  \label{fig:ollama-error}
+\end{figure}
+
+\subsubsection{Verdict}
+\textbf{Non viable pour la production.} Exploitable uniquement pour exploration et validation de POC en dehors de toute contrainte de temps de réponse.
+
+\subsection{Axe 2 — APIs gratuites (OpenRouter, Groq)}
+
+\subsubsection{OpenRouter (Free Tier)}
+OpenRouter est une plateforme d'agrégation d'APIs LLM. Le tier gratuit impose une fenêtre de contexte réduite.
+
 \begin{itemize}
-  \item les solutions \textbf{gratuites locales} sont-elles exploitables dans nos contraintes matérielles;
-  \item les \textbf{APIs gratuites} sont-elles suffisantes pour un flux e-commerce réel;
-  \item les \textbf{APIs payantes} apportent-elles le niveau de robustesse attendu pour industrialiser la solution.
+  \item \textbf{Gemma 4 (Google)}~: réussit sur texte et image unique~; context overflow sur multi-images et images + métadonnées~;
+  \item \textbf{Nemotron Nano 12B 2 VL (NVIDIA)}~: réussit jusqu'au multi-images, mais context overflow sur le scénario complet~;
+  \item \textbf{Qwen 3.6 Plus (Alibaba)}~: crash dès la première image~; erreurs HTTP 429 dès le premier appel.
 \end{itemize}
 
-Les tests ont été menés sur des scénarios de difficulté croissante: texte seul, image unique, multi-images, puis images + métadonnées.
-
-\subsection{Axe 1 -- Solutions gratuites locales (Ollama)}
-\subsubsection{Résultats observés}
-Les essais locaux avec des modèles multimodaux open-source (Gemma, Qwen-VL, Moondream) montrent une limite structurelle de l'infrastructure disponible:
-\begin{itemize}
-  \item latence très élevée (plusieurs minutes même pour une réponse simple);
-  \item forte pression CPU/RAM en l'absence de GPU dédié;
-  \item instabilités ou échecs sur les cas multi-images.
-\end{itemize}
-
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\linewidth]{image.png}
-  \caption{Exemple d'échec et de surcharge en exécution locale}
-  \label{fig:local-ollama-error}
+  \includegraphics[width=0.85\linewidth]{image_2.png}
+  \caption{Erreur HTTP 429 sur OpenRouter — quota dépassé sur multi-images}
+  \label{fig:openrouter-429}
 \end{figure}
 
+\subsubsection{Groq (Free Tier)}
+Groq propose une inférence ultra-rapide via des puces LPU propriétaires. Le tier gratuit est limité à \textbf{12 000 tokens par minute (TPM)}.
+
+Pour un seul produit avec 4 images et ses métadonnées, le test a consommé \textbf{46 214 tokens}, dépassant le quota d'un facteur 3,8$\times$. Le serveur retourne systématiquement~:
+
+\begin{verbatim}
+Error 413: Request Too Large for 'llama-3.3-70b-versatile'
+Limit 12,000 TPM | Requested 46,471 tokens
+-> rate_limit_exceeded
+\end{verbatim}
+
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\linewidth]{image_1.png}
-  \caption{Saturation des ressources machine en test local}
-  \label{fig:local-ollama-cpu}
+  \includegraphics[width=0.85\linewidth]{image_3.png}
+  \caption{Dépassement du quota TPM Groq ($\times$3,8 sur un seul produit avec métadonnées)}
+  \label{fig:groq-quota}
 \end{figure}
 
-\subsubsection{Variante Colab GPU gratuit}
-Pour contourner la limite matérielle locale, des tests ont été réalisés sur Google Colab (GPU gratuit). Les modèles lourds restent néanmoins difficiles à exploiter opérationnellement: temps de réponse long, consommation GPU proche de la limite mémoire, et faible marge de stabilité pour des traitements en lot.
+\subsubsection{Verdict}
+\textbf{Utile pour le prototypage rapide uniquement.} La contrainte de quotas rend ces plateformes incompatibles avec un flux d'enrichissement e-commerce soutenu.
+
+\subsection{Axe 3 — GPU cloud (Google Colab)}
+
+Pour contourner les limites matérielles locales, des tests ont été conduits sur Google Colab avec GPU gratuit. Deux modèles lourds ont été évalués~:
+
+\subsubsection{Qwen 3.5 27B}
+Latence~: \textbf{12 minutes} pour une phrase simple. Consommation GPU~: 13,3 Go sur 15,0 Go disponibles. Marge de sécurité insuffisante pour un traitement en lot.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.95\linewidth]{test_qwen3.5.27b_avec_colab.png}
-  \caption{Test Qwen 3.5 27B sur Colab GPU gratuit}
+  \includegraphics[width=0.85\linewidth]{test_qwen3.5.27b_avec_colab.png}
+  \caption{Qwen 3.5 27B sur Colab — latence de 12 min, RAM GPU à 13,3/15 Go}
   \label{fig:colab-qwen}
 \end{figure}
 
+\subsubsection{Gemma 31B}
+Latence~: \textbf{5 minutes}. Consommation GPU~: 14,0 Go sur 15,0 Go, frôlant l'erreur Out Of Memory. RAM système à 11,5 Go.
+
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.95\linewidth]{test_gemma31b_avec_colab.png}
-  \caption{Test Gemma 31B sur Colab GPU gratuit}
+  \includegraphics[width=0.85\linewidth]{test_gemma31b_avec_colab.png}
+  \caption{Gemma 31B sur Colab — saturation GPU critique à 14,0/15 Go}
   \label{fig:colab-gemma}
 \end{figure}
 
-\textbf{Verdict de l'axe 1:} viable pour exploration et POC technique, non viable pour un pipeline de production stable dans notre contexte.
+\subsubsection{Verdict}
+\textbf{Non viable pour la production.} La latence prohibitive et les marges d'erreur minimales rendent ces configurations inadaptées à un pipeline batch.
 
-\subsection{Axe 2 -- APIs gratuites (OpenRouter, Groq, AI Studio Free)}
-\subsubsection{OpenRouter (free tier)}
-Les tests OpenRouter confirment un comportement acceptable sur des entrées simples (texte seul, parfois image unique), mais les cas cibles du projet (multi-images + métadonnées) provoquent régulièrement:
-\begin{itemize}
-  \item \textbf{context overflow};
-  \item \textbf{HTTP 429} (Too Many Requests);
-  \item dégradation de robustesse entre appels successifs.
-\end{itemize}
+\subsection{Axe 4 — APIs payantes (candidats production)}
+\label{sec:apis-payantes}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.95\linewidth]{image_2.png}
-  \caption{Exemple de limite contextuelle sur OpenRouter en multi-images}
-  \label{fig:openrouter-overflow}
-\end{figure}
-
-\subsubsection{Groq (free tier)}
-Sur Groq, la latence est bonne, mais la contrainte TPM (tokens par minute) devient bloquante sur un produit enrichi avec images et métadonnées. Les erreurs \texttt{HTTP 413} et \texttt{rate\_limit\_exceeded} empêchent la continuité du flux.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.95\linewidth]{image_3.png}
-  \caption{Erreur de quota tokens observée sur Groq}
-  \label{fig:groq-413}
-\end{figure}
-
-\subsubsection{Google AI Studio (gratuit)}
-Les essais montrent une meilleure qualité de réponse que plusieurs alternatives gratuites, mais les mêmes limites restent présentes: quotas gratuits serrés, erreurs 429 sous charge, et absence de garantie de service.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.95\linewidth]{image_4.png}
-  \caption{Exemple d'utilisation AI Studio avec contrainte de ressources gratuites}
-  \label{fig:aistudio-free}
-\end{figure}
-
-\textbf{Verdict de l'axe 2:} utile pour prototypage rapide, insuffisant pour une chaîne fiable d'enrichissement e-commerce.
-
-\subsection{Axe 3 -- APIs payantes (candidats de production)}
-Les résultats des axes 1 et 2 conduisent à considérer des APIs payantes pour la phase d'industrialisation. Le Tableau \ref{tab:comparaison-payant} synthétise les options les plus crédibles.
+Les résultats des trois axes précédents orientent naturellement vers les APIs payantes. Une comparaison qualitative des candidats les plus crédibles est présentée dans le Tableau \ref{tab:comparaison-payant}.
 
 \begin{table}[H]
   \centering
   \caption{Comparaison des APIs payantes candidates pour la production}
   \label{tab:comparaison-payant}
-  \begin{tabular}{|p{2.6cm}|p{3.1cm}|p{2.1cm}|p{2.0cm}|p{3.2cm}|}
+  \begin{tabular}{|p{2.5cm}|p{3.5cm}|p{2.0cm}|p{2.0cm}|p{3.0cm}|}
     \hline
     \textbf{Solution} & \textbf{Forces} & \textbf{Latence} & \textbf{Coût} & \textbf{Risque principal} \\
     \hline
-    GPT-4o (OpenAI) & Très bonne qualité multimodale, sortie JSON robuste & Faible à moyenne & Élevé & Coût à l'échelle et gouvernance des données \\
+    GPT-4o (OpenAI) & Qualité multimodale élevée, JSON mode natif, robustesse prouvée & Faible–moyenne & Élevé & Coût à l'échelle, politique de données \\
     \hline
-    Gemini 2.5 (Google) & Bonne qualité visuelle, contexte large & Moyenne & Moyen à élevé & Stabilité des quotas selon plan choisi \\
+    Gemini 2.5 Pro (Google) & Contexte très large, bonne analyse visuelle & Moyenne & Moyen–élevé & Quotas selon plan, RGPD \\
     \hline
-    Claude Sonnet (Anthropic) & Excellente compréhension sémantique, bonne rigueur de sortie & Faible à moyenne & Élevé & Coût et intégration selon stack retenue \\
+    Claude Sonnet (Anthropic) & Rigueur sémantique, sortie JSON très fiable & Faible–moyenne & Élevé & Coût, intégration selon stack \\
     \hline
   \end{tabular}
 \end{table}
 
-Sur le plan métier, ces offres payantes répondent mieux aux exigences critiques du projet: robustesse, continuité de service, meilleur support des scénarios multi-images et gestion contrôlée des quotas.
+Ces solutions répondent aux exigences critiques du projet~: robustesse, continuité de service, support des scénarios multi-images, et gestion contrôlée des quotas. Le choix final sera confirmé en accord avec la politique de gouvernance des données de DECADE.
+
+\subsection{Tableau comparatif global}
+Le Tableau \ref{tab:comparaison-llm-global} résume l'ensemble des tests conduits selon les quatre scénarios de complexité.
+
+\begin{table}[H]
+  \centering
+  \caption{Tableau comparatif global des solutions LLM testées}
+  \label{tab:comparaison-llm-global}
+  \scriptsize
+  \begin{tabular}{|p{2.1cm}|p{1.8cm}|p{1.2cm}|p{1.2cm}|p{1.4cm}|p{1.4cm}|p{1.8cm}|}
+    \hline
+    \textbf{Plateforme} & \textbf{Modèle} & \textbf{Texte} & \textbf{1 image} & \textbf{Multi-img} & \textbf{Img+Méta} & \textbf{Verdict} \\
+    \hline
+    \multirow{3}{*}{Ollama (local)} & Gemma 4       & \textbf{Lent} 2 min  & \textbf{Lent} 6 min  & \textbf{KO}       & \textbf{KO}       & \cellcolor{red!20}Non viable \\
+                    & Qwen-VL       & \textbf{Lent} 2 min  & \textbf{Lent} 6 min  & \textbf{KO}       & \textbf{KO}       & \cellcolor{red!20}Non viable \\
+                    & Moondream     & \textbf{Lent} 3 min  & \textbf{Lent} 5 min  & \textbf{KO}       & \textbf{KO}       & \cellcolor{red!20}Non viable \\
+    \hline
+    \multirow{3}{*}{OpenRouter Free} & Gemma 4      & \textbf{OK} & \textbf{OK} & \textbf{KO} overflow & \textbf{KO} overflow & \cellcolor{yellow!30}Proto only \\
+                     & Nemotron 12B & \textbf{OK} & \textbf{OK} & \textbf{OK} & \textbf{KO} overflow & \cellcolor{yellow!30}Proto only \\
+                     & Qwen 3.6+    & \textbf{OK} & \textbf{KO} crash & \textbf{KO} & \textbf{KO} & \cellcolor{red!20}Non viable \\
+    \hline
+    \multirow{2}{*}{Groq Free} & LLaMA 3.3 70B & \textbf{OK} & \textbf{OK} & \textbf{OK} & \textbf{KO} ($\times$3,8) & \cellcolor{red!20}Non viable \\
+                   & Groq Compound & \textbf{OK} & \textbf{OK} & \textbf{OK} & \textbf{KO} ($\times$3,8) & \cellcolor{red!20}Non viable \\
+    \hline
+    \multirow{2}{*}{Google Colab GPU} & Qwen 3.5 27B & \textbf{OK} & \textbf{OK} 12 min & \textbf{Lent} & \textbf{Lent} & \cellcolor{orange!20}Exploration \\
+                      & Gemma 31B    & \textbf{OK} & \textbf{OK} 5 min  & \textbf{Lent} & \textbf{Lent} & \cellcolor{orange!20}Exploration \\
+    \hline
+    \multirow{3}{*}{APIs Payantes} & GPT-4o        & \textbf{OK} & \textbf{OK} & \textbf{OK} & \textbf{OK} & \cellcolor{green!20}Production \\
+                     & Gemini 2.5 Pro & \textbf{OK} & \textbf{OK} & \textbf{OK} & \textbf{OK} & \cellcolor{green!20}Production \\
+                     & Claude Sonnet  & \textbf{OK} & \textbf{OK} & \textbf{OK} & \textbf{OK} & \cellcolor{green!20}Production \\
+    \hline
+  \end{tabular}
+\end{table}
 
 \subsection{Synthèse de décision}
-L'étude expérimentale met en évidence une trajectoire claire:
+L'étude expérimentale établit une trajectoire claire~:
+
 \begin{itemize}
-  \item \textbf{Gratuit local}: adapté à la recherche et aux démonstrations ponctuelles, mais trop instable pour un flux opérationnel;
-  \item \textbf{APIs gratuites}: utiles pour explorer rapidement des modèles, mais contraintes de quotas incompatibles avec un usage soutenu;
-  \item \textbf{APIs payantes}: option la plus réaliste pour atteindre la robustesse attendue en environnement e-commerce.
+  \item \textbf{Local (Ollama)}~: exploration et POC, latence prohibitive sans GPU dédié~;
+  \item \textbf{APIs gratuites (OpenRouter, Groq)}~: prototypage rapide, quotas incompatibles avec un flux continu~;
+  \item \textbf{GPU cloud gratuit (Colab)}~: investigations techniques, latence et marges inacceptables~;
+  \item \textbf{APIs payantes}~: seule option réaliste pour la robustesse et la continuité de service requises.
 \end{itemize}
 
-La stratégie recommandée est donc hybride: utiliser les offres gratuites pour le prototypage initial, puis basculer vers une API payante pour la phase de validation industrielle et de déploiement progressif.
+La stratégie retenue est \textbf{hybride}~: utiliser les offres gratuites pour le prototypage initial et l'ajustement des prompts, puis basculer vers une API payante pour la validation industrielle et le déploiement progressif.
 
+% -----------------------------------------------------------------------
 \section{Conclusion}
-Ce chapitre a transformé le besoin initial en exigences structurées et mesurables, puis a démontré les limites de l'existant et l'intérêt d'une approche hybride orientée IA multimodale. Les éléments établis ici serviront de base à la spécification détaillée et à la conception d'architecture du chapitre suivant.
+Ce chapitre a établi l'état de l'existant sur deux axes. D'une part, Apache Solr — déjà opérationnel dans le projet — présente six limitations structurelles, dont la principale est la dépendance directe à la complétude des attributs produit dans Hybris~: des attributs manquants ou incohérents produisent un index Solr appauvri, des facettes peu fiables et une pertinence de recherche dégradée. L'enrichissement LLM adresse ce verrou en alimentant Hybris — et donc Solr — avec des attributs structurés, normalisés et validés. D'autre part, l'évaluation comparative des solutions LLM démontre que seules les APIs payantes offrent le niveau de robustesse requis pour industrialiser ce pipeline. Ces deux conclusions guident directement les choix de conception présentés dans le chapitre suivant.

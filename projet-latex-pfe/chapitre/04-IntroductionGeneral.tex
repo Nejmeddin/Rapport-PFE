@@ -3,14 +3,30 @@
 \addcontentsline{toc}{chapter}{INTRODUCTION GÉNÉRALE}
 \thispagestyle{MyStyle}
 
-La transformation numérique du commerce électronique a profondément modifié la manière dont les entreprises conçoivent, valorisent et diffusent leurs catalogues produits. Dans cet écosystème, la donnée produit n'est plus un simple support descriptif: elle devient un levier stratégique qui conditionne la qualité de la recherche, la pertinence des recommandations et, au final, la conversion commerciale.
+La transformation numérique du commerce électronique a profondément reconfiguré la manière dont les entreprises conçoivent, valorisent et diffusent leurs catalogues produits. Dans cet écosystème hautement concurrentiel, la donnée produit n'est plus un simple support descriptif~: elle constitue un levier stratégique qui conditionne la qualité de la recherche, la pertinence des recommandations et, au final, la conversion commerciale.
 
-Dans le contexte de \textbf{DECADE Sfax}, cette problématique prend une dimension opérationnelle forte. Les fiches produit, gérées dans un environnement \textbf{SAP Commerce Cloud (Hybris)} et exploitées par \textbf{Apache Solr}, présentent souvent des attributs incomplets ou hétérogènes. Cette situation dégrade l'expérience utilisateur: filtres peu fiables, recherche imprécise, difficultés de navigation et perte de visibilité de certains articles.
+Or, la construction et la maintenance de ces données représentent un défi opérationnel considérable. Les catalogues e-commerce modernes comptent souvent plusieurs dizaines de milliers de références, chacune devant être décrite selon des attributs structurés et cohérents~: couleur, matière, catégorie, motif, saisonnalité, description normalisée. Lorsque ces attributs sont incomplets, hétérogènes ou absents, la qualité de la recherche se dégrade, les facettes de navigation deviennent peu fiables, et l'expérience utilisateur s'en trouve directement pénalisée.
 
-Le présent projet de fin d'études répond à ce besoin en proposant une démarche d'\textbf{enrichissement automatique des données produit par IA multimodale}. L'idée directrice consiste à mobiliser un \textit{Large Language Model} capable d'analyser des informations textuelles et visuelles afin de suggérer des attributs structurés (couleur, matière, catégorie, motif, saisonnalité, description normalisée), puis d'intégrer ces enrichissements dans une chaîne maîtrisée de validation et d'exploitation.
+Dans le contexte de \textbf{DECADE Sfax}, cette problématique prend une dimension opérationnelle forte. Les fiches produit, gérées dans un environnement \textbf{SAP Commerce Cloud (Hybris)} et exploitées par le moteur de recherche \textbf{Apache Solr}, présentent fréquemment des attributs manquants ou incohérents. L'enrichissement de ces données repose aujourd'hui en grande partie sur des interventions manuelles coûteuses, difficilement scalables et sources d'hétérogénéité.
 
-Au-delà de l'aspect algorithmique, l'enjeu est d'ordre \textbf{industriel}: garantir la fiabilité des données générées, préserver la cohérence avec le modèle Hybris existant, et améliorer l'indexation Solr sans perturber les processus métier. Le projet s'inscrit ainsi dans une logique de compromis entre innovation IA, gouvernance de la donnée et contraintes de production.
+Le présent projet de fin d'études répond à ce besoin en proposant une solution d'\textbf{enrichissement automatique des données produit par intelligence artificielle multimodale}. L'idée directrice consiste à mobiliser un \textit{Large Language Model} capable d'analyser conjointement des images produit et des métadonnées textuelles afin de suggérer des attributs structurés avec un score de confiance associé. Ces suggestions sont ensuite soumises à un pipeline de validation humaine avant d'être injectées dans Hybris et réindexées dans Solr.
 
-Ce rapport est organisé de manière progressive. Le \textbf{chapitre \ref{chap:cadre-general}} présente le cadre général du projet: organisme d'accueil, problématique, objectifs et périmètre. Les chapitres suivants détaillent l'analyse, la conception, la réalisation, puis la validation de la solution proposée.
+Au-delà de l'aspect algorithmique, l'enjeu est d'ordre \textbf{industriel}~: garantir la fiabilité des données générées, préserver la cohérence avec le modèle de données Hybris existant, maîtriser la traçabilité des décisions de validation, et améliorer l'indexation Solr sans perturber les processus métier en place. Le projet s'inscrit ainsi dans une logique de compromis entre \textit{innovation IA}, \textit{gouvernance de la donnée} et \textit{contraintes de production}.
 
-Cette introduction pose donc le fil conducteur du mémoire: \textit{transformer une problématique de qualité de données en une opportunité d'amélioration mesurable de la performance e-commerce, grâce à une IA multimodale intégrée de façon pragmatique dans l'existant}. 
+Ce mémoire est organisé de la manière suivante~:
+
+\begin{itemize}
+  \item Le \textbf{chapitre \ref{chap:cadre-general}} présente le cadre général du projet~: organisme d'accueil, problématique, objectifs, acteurs impliqués, périmètre et contraintes, ainsi que la démarche méthodologique retenue.
+
+  \item Le \textbf{chapitre \ref{chap:analyse-besoins-existant}} formalise les besoins fonctionnels et non fonctionnels, pose les cas d'usage prioritaires, et propose une étude de l'existant~: évaluation expérimentale des solutions locales et des APIs LLM candidates, étude comparative des outils PIM concurrents, et état de l'art des technologies mobilisées.
+
+  \item Le \textbf{chapitre 3} détaille la conception de la solution~: architecture globale, modèles UML (classes, composants, séquences), choix techniques et stratégie d'intégration dans l'environnement Hybris/Solr.
+
+  \item Le \textbf{chapitre 4} présente la réalisation technique~: environnement de développement, implémentation du pipeline d'enrichissement, développement de l'extension Hybris, du dashboard React et de l'API REST.
+
+  \item Le \textbf{chapitre 5} expose les tests et la validation de la solution, au regard des indicateurs de qualité définis en amont.
+
+  \item Une \textbf{conclusion générale} synthétise les apports du projet et trace des perspectives d'évolution.
+\end{itemize}
+
+Ce mémoire poursuit ainsi un fil conducteur clair~: \textit{transformer une problématique de qualité de données en une opportunité d'amélioration mesurable de la performance e-commerce, grâce à une IA multimodale intégrée de façon pragmatique et maîtrisée dans l'écosystème Hybris/Solr.}
